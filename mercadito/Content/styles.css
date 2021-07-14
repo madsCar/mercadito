@@ -3839,7 +3839,7 @@ textarea.form-control-lg {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
-
+/*
 .nav {
   display: flex;
   flex-wrap: wrap;
@@ -3927,7 +3927,7 @@ textarea.form-control-lg {
 .nav-fill .nav-item .nav-link,
 .nav-justified .nav-item .nav-link {
   width: 100%;
-}
+}*/
 
 .tab-content > .tab-pane {
   display: none;
@@ -3935,7 +3935,7 @@ textarea.form-control-lg {
 .tab-content > .active {
   display: block;
 }
-
+/*
 .navbar {
   position: relative;
   display: flex;
@@ -4255,7 +4255,7 @@ textarea.form-control-lg {
 .navbar-dark .navbar-text a:hover,
 .navbar-dark .navbar-text a:focus {
   color: #fff;
-}
+}*/
 
 .card {
   position: relative;
@@ -10836,6 +10836,9 @@ textarea.form-control-lg {
 
   .d-print-none {
     display: none !important;
+  }
+  .img-brand{
+      border: 1px solid #fff;
   }
 }
 

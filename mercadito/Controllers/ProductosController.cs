@@ -21,6 +21,12 @@ namespace mercadito.Controllers
             return View(productoes.ToList());
         }
 
+        public ActionResult IndexClientes()
+        {
+            var productoes = db.Productoes.Include(p => p.CategoriasProducto);
+            return View(productoes.ToList());
+        }
+
         // GET: Productos/Details/5
         public ActionResult Details(int? id)
         {

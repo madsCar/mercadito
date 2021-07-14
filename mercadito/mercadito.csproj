@@ -251,6 +251,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="img\mercadito.png" />
+    <Content Include="img\vegetables %281%29.svg" />
     <Content Include="Models\Mercado.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Mercado.edmx</DependentUpon>
@@ -379,6 +380,7 @@
     <Content Include="Views\VentaDetalles\Details.cshtml" />
     <Content Include="Views\VentaDetalles\Edit.cshtml" />
     <Content Include="Views\VentaDetalles\Index.cshtml" />
+    <Content Include="Views\Productos\IndexClientes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

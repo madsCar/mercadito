@@ -30,47 +30,65 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container px-4 px-lg-5">
-            <a class="navbar-brand" href="#!">Mercadito Online</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                    <li class="nav-item">@Html.ActionLink("Inicio", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Nosotros", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Contacto", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#!">Todos los productos</a></li>
-                            <li><hr class="dropdown-divider" /></li>
-                            <li><a class="dropdown-item" href="#!">Verduras</a></li>
-                            <li><a class="dropdown-item" href="#!">Frutas</a></li>
-                            <li><a class="dropdown-item" href="#!">Semillas</a></li>
-                        </ul>
-                    </li>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <img class="img-brand" src="~/img/vegetables (1).svg" width="32" height="32">
+            <div class="navbar-header">
+
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                @Html.ActionLink("Mercadito Online", "Index", "Home", null, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Inicio", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Productos", "IndexClientes", "Productos")</li>
+                    <li>@Html.ActionLink("Contactanos", "Contact", "Home")</li>
+
+                    @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <li>@Html.ActionLink("RolesAdmin", "Index", "RolesAdmin")</li>
+                        <li>@Html.ActionLink("UsersAdmin", "Index", "UsersAdmin")</li>
+                        <li>@Html.ActionLink("Empleados", "Index", "Empleadoes")</li>
+                        <li>@Html.ActionLink("Clientes", "Index", "Clientes")</li>
+                        <li>@Html.ActionLink("Productos", "Index", "Productos")</li>
+                    }
+                    @if (Request.IsAuthenticated && User.IsInRole("Empleado"))
+                    {
+                        <li>@Html.ActionLink("Productos", "Index", "Productos")</li>
+
+                    }
+                    @if (Request.IsAuthenticated && User.IsInRole("Cliente"))
+                    {
+                        <li>@Html.ActionLink("Productos", "IndexClientes", "Productos")</li>
+                        <li>
+                            <form class="d-flex">
+                                <button class=".btn-outline-dark" type="submit">
+                                    <i class="bi-cart-fill me-1"></i>
+                                    Carrito
+                                    <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                                </button>
+                            </form>
+                        </li>
+                    }
                 </ul>
-                <form class="d-flex">
-                    <button class=".btn-outline-light" type="submit">
-                        <i class="bi-cart-fill me-1"></i>
-                        Carrito
-                        <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                    </button>
-                </form>
-                
-                        @Html.Partial("_LoginPartial")
+
+                @Html.Partial("_LoginPartial")
             </div>
         </div>
-    </nav>
+    </div>
 
 
 
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <!-- Footer-->
-        <footer class="py-5 bg-dark">
-            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Mercadito Online 2021</p></div>
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Mercadito Online - UTL</p>
         </footer>
     </div>
 
@@ -89,4 +107,4 @@
     <!--<script src="../../assets/js/vendor/holder.min.js"></script>-->
 
 </body>
-    </html>
+</html>
