@@ -1,0 +1,57 @@
+﻿@model IEnumerable<MercaditoRecargado.Models.Venta>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.clienteVenta)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fechaVenta)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TarjetaVenta)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DireccionVenta)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RequirioFactura)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.clienteVenta)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.fechaVenta)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TarjetaVenta)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DireccionVenta)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RequirioFactura)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.VentaID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.VentaID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.VentaID })
+        </td>
+    </tr>
+}
+
+</table>

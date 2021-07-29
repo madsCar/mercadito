@@ -23,6 +23,7 @@ namespace mercadito.Models
         public int EmpleadoDatos { get; set; }
         public string EmlpleadoUser { get; set; }
     
+        public virtual AspNetUser AspNetUser { get; set; }
         public virtual Persona Persona { get; set; }
     }
 }

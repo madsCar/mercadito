@@ -27,11 +27,7 @@ namespace mercadito.Models
         public string ApPaterno { get; set; }
         public string ApMaterno { get; set; }
         public Nullable<System.DateTime> FechaNac { get; set; }
-        public string Domicilio { get; set; }
-        public string Telefono { get; set; }
         public string Genero { get; set; }
-        public string Estado { get; set; }
-        public string Ciudad { get; set; }
         public string CP { get; set; }
         public string CURP { get; set; }
         public string RFC { get; set; }
