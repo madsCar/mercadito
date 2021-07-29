@@ -1,0 +1,58 @@
+﻿@model MercaditoRecargado.Models.DatosTarjeta
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>DatosTarjeta</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Last4)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Last4)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumeroTarjeta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumeroTarjeta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaVencimiento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaVencimiento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CVV)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CVV)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ClienteTarjeta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ClienteTarjeta)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.DatosTarjetaID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
