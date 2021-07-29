@@ -1,0 +1,64 @@
+﻿@model MercaditoRecargado.Models.Venta
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Venta</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.clienteVenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.clienteVenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fechaVenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fechaVenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TarjetaVenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TarjetaVenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DireccionVenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DireccionVenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RequirioFactura)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RequirioFactura)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

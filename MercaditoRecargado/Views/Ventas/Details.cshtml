@@ -1,0 +1,58 @@
+﻿@model MercaditoRecargado.Models.Venta
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Venta</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.clienteVenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.clienteVenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fechaVenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fechaVenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TarjetaVenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TarjetaVenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DireccionVenta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DireccionVenta)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RequirioFactura)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RequirioFactura)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.VentaID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
