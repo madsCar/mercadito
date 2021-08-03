@@ -188,11 +188,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="MercaditoMigrations\202107291903552_MercaditoInitial.cs" />
-    <Compile Include="MercaditoMigrations\202107291903552_MercaditoInitial.designer.cs">
-      <DependentUpon>202107291903552_MercaditoInitial.cs</DependentUpon>
+    <Compile Include="Migrations\202107311901549_Initial.cs" />
+    <Compile Include="Migrations\202107311901549_Initial.Designer.cs">
+      <DependentUpon>202107311901549_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="MercaditoMigrations\Configuration.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdminViewModel.cs" />
     <Compile Include="Models\CategoriasProducto.cs" />
@@ -380,8 +380,8 @@
     <Content Include="Scripts\jquery-3.4.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MercaditoMigrations\202107291903552_MercaditoInitial.resx">
-      <DependentUpon>202107291903552_MercaditoInitial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202107311901549_Initial.resx">
+      <DependentUpon>202107311901549_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

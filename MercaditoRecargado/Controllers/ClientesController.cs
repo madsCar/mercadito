@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -13,11 +14,12 @@ namespace MercaditoRecargado.Controllers
     public class ClientesController : Controller
     {
         private ClientesModelContext db = new ClientesModelContext();
-
+        private string FechaTemp;
         // GET: Clientes
         public ActionResult Index()
         {
-            return View(db.Cliente.ToList());
+            var clientes = db.Cliente.Include(c => c.Persona);
+            return View(clientes.ToList());
         }
 
         // GET: Clientes/Details/5
@@ -38,6 +40,7 @@ namespace MercaditoRecargado.Controllers
         // GET: Clientes/Create
         public ActionResult Create()
         {
+            ViewBag.ClienteDatos = new SelectList(db.Personas, "PersonaID", "Nombre");
             return View();
         }
 
@@ -46,17 +49,55 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ClienteID,fechaRegistro,Estatus,ClienteDatos,ClienteUser")] Cliente cliente)
+        public ActionResult Create(Cliente cliente)
         {
+
             if (ModelState.IsValid)
             {
-                db.Cliente.Add(cliente);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+
+
+
+                // if (Request.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Empleado"))
+                // {
+                //      cliente.ClienteUser = null;
+                //  }
+                try
+                {
+                    cliente.fechaRegistro = DateTime.Now;
+                    cliente.Estatus = 1;
+                    var datos = TempData["data"] as string;
+                    cliente.ClienteUser = datos;
+                    db.Personas.Add(cliente.Persona);
+                    db.Cliente.Add(cliente);
+                    db.SaveChanges();
+                }
+                catch (DbEntityValidationException e)
+                {
+
+                    Console.WriteLine(e);
+                }
+
+                if (Request.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Empleado"))
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+
+                    return Redirect("~/Account/Login");
+                }
+
+
+
+
             }
 
+            ViewBag.ClienteDatos = new SelectList(db.Personas, "PersonaID", "Nombre", cliente.ClienteDatos);
             return View(cliente);
         }
+
+
+
 
         // GET: Clientes/Edit/5
         public ActionResult Edit(int? id)
@@ -66,10 +107,12 @@ namespace MercaditoRecargado.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Cliente cliente = db.Cliente.Find(id);
+            FechaTemp = cliente.Persona.FechaNac.ToString();
             if (cliente == null)
             {
                 return HttpNotFound();
             }
+            ViewBag.ClienteDatos = new SelectList(db.Personas, "PersonaID", "Nombre", cliente.ClienteDatos);
             return View(cliente);
         }
 
@@ -78,14 +121,18 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ClienteID,fechaRegistro,Estatus,ClienteDatos,ClienteUser")] Cliente cliente)
+        public ActionResult Edit(Cliente cliente)
         {
             if (ModelState.IsValid)
             {
+                 
+                db.Entry(cliente.Persona).State = EntityState.Modified;
+          
                 db.Entry(cliente).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.ClienteDatos = new SelectList(db.Personas, "PersonaID", "Nombre", cliente.ClienteDatos);
             return View(cliente);
         }
 

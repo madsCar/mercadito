@@ -1,8 +1,6 @@
 ﻿@model MercaditoRecargado.Models.Cliente
 
-@{
-    ViewBag.Title = "Details";
-}
+@{ ViewBag.Title = "Details"; }
 
 <h2>Details</h2>
 
@@ -26,20 +24,14 @@
             @Html.DisplayFor(model => model.Estatus)
         </dd>
 
+
+
         <dt>
-            @Html.DisplayNameFor(model => model.ClienteDatos)
+            @Html.DisplayNameFor(model => model.Persona.Nombre)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ClienteDatos)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ClienteUser)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ClienteUser)
+            @Html.DisplayFor(model => model.Persona.Nombre)
         </dd>
 
     </dl>
