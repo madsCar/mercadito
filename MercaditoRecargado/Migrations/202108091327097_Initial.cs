@@ -12,7 +12,7 @@ namespace MercaditoRecargado.Migrations
                 c => new
                     {
                         CategoriasProductoID = c.Int(nullable: false, identity: true),
-                        Descripcion = c.String(),
+                        Descripcion = c.String(nullable: false, maxLength: 60),
                     })
                 .PrimaryKey(t => t.CategoriasProductoID);
             
@@ -21,15 +21,14 @@ namespace MercaditoRecargado.Migrations
                 c => new
                     {
                         ProductoID = c.Int(nullable: false, identity: true),
-                        nombre = c.String(),
-                        CategoriaID = c.Int(nullable: false),
+                        nombre = c.String(nullable: false, maxLength: 60),
                         Estatus = c.Int(nullable: false),
-                        Precio = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        CategoriasProducto_CategoriasProductoID = c.Int(),
+                        Precio = c.Double(nullable: false),
+                        CategoriasProductoID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.ProductoID)
-                .ForeignKey("dbo.CategoriasProductoes", t => t.CategoriasProducto_CategoriasProductoID)
-                .Index(t => t.CategoriasProducto_CategoriasProductoID);
+                .ForeignKey("dbo.CategoriasProductoes", t => t.CategoriasProductoID, cascadeDelete: true)
+                .Index(t => t.CategoriasProductoID);
             
             CreateTable(
                 "dbo.VentaDetalles",
@@ -77,13 +76,12 @@ namespace MercaditoRecargado.Migrations
                         ClienteID = c.Int(nullable: false, identity: true),
                         fechaRegistro = c.DateTime(),
                         Estatus = c.Int(nullable: false),
-                        ClienteDatos = c.Int(nullable: false),
+                        PersonaID = c.Int(nullable: false),
                         ClienteUser = c.String(),
-                        Persona_PersonaID = c.Int(),
                     })
                 .PrimaryKey(t => t.ClienteID)
-                .ForeignKey("dbo.Personas", t => t.Persona_PersonaID)
-                .Index(t => t.Persona_PersonaID);
+                .ForeignKey("dbo.Personas", t => t.PersonaID, cascadeDelete: true)
+                .Index(t => t.PersonaID);
             
             CreateTable(
                 "dbo.DatosTarjetas",
@@ -184,25 +182,25 @@ namespace MercaditoRecargado.Migrations
             DropForeignKey("dbo.Empleadoes", "Persona_PersonaID", "dbo.Personas");
             DropForeignKey("dbo.Ventas", "DireccionCliente_DireccionClienteID", "dbo.DireccionClientes");
             DropForeignKey("dbo.DireccionClientes", "Persona_PersonaID", "dbo.Personas");
-            DropForeignKey("dbo.Clientes", "Persona_PersonaID", "dbo.Personas");
+            DropForeignKey("dbo.Clientes", "PersonaID", "dbo.Personas");
             DropForeignKey("dbo.Facturas", "Venta_VentaID", "dbo.Ventas");
             DropForeignKey("dbo.Facturas", "Cliente_ClienteID", "dbo.Clientes");
             DropForeignKey("dbo.Ventas", "DatosTarjeta_DatosTarjetaID", "dbo.DatosTarjetas");
             DropForeignKey("dbo.DatosTarjetas", "Cliente_ClienteID", "dbo.Clientes");
             DropForeignKey("dbo.VentaDetalles", "ProductoID", "dbo.Productoes");
-            DropForeignKey("dbo.Productoes", "CategoriasProducto_CategoriasProductoID", "dbo.CategoriasProductoes");
+            DropForeignKey("dbo.Productoes", "CategoriasProductoID", "dbo.CategoriasProductoes");
             DropIndex("dbo.Empleadoes", new[] { "Persona_PersonaID" });
             DropIndex("dbo.DireccionClientes", new[] { "Persona_PersonaID" });
             DropIndex("dbo.Facturas", new[] { "Venta_VentaID" });
             DropIndex("dbo.Facturas", new[] { "Cliente_ClienteID" });
             DropIndex("dbo.DatosTarjetas", new[] { "Cliente_ClienteID" });
-            DropIndex("dbo.Clientes", new[] { "Persona_PersonaID" });
+            DropIndex("dbo.Clientes", new[] { "PersonaID" });
             DropIndex("dbo.Ventas", new[] { "Cliente_ClienteID" });
             DropIndex("dbo.Ventas", new[] { "DireccionCliente_DireccionClienteID" });
             DropIndex("dbo.Ventas", new[] { "DatosTarjeta_DatosTarjetaID" });
             DropIndex("dbo.VentaDetalles", new[] { "Venta_VentaID" });
             DropIndex("dbo.VentaDetalles", new[] { "ProductoID" });
-            DropIndex("dbo.Productoes", new[] { "CategoriasProducto_CategoriasProductoID" });
+            DropIndex("dbo.Productoes", new[] { "CategoriasProductoID" });
             DropTable("dbo.Empleadoes");
             DropTable("dbo.DireccionClientes");
             DropTable("dbo.Personas");

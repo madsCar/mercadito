@@ -17,7 +17,8 @@ namespace MercaditoRecargado.Controllers
         // GET: Productoes
         public ActionResult Index()
         {
-            return View(db.Producto.ToList());
+            var producto = db.Producto.Include(c => c.CategoriasProducto);
+            return View(producto.ToList());
         }
 
         // GET: Productoes/Details/5
@@ -38,6 +39,19 @@ namespace MercaditoRecargado.Controllers
         // GET: Productoes/Create
         public ActionResult Create()
         {
+            List<SelectListItem> listCategorias;
+        // CARGAMOS EL DropDownList DE REGIONES
+        var categoria = db.CategoriasProducto.ToList();
+            listCategorias = new List<SelectListItem>();
+            foreach (var item in categoria)
+            {
+                listCategorias.Add(new SelectListItem
+                {
+                    Text = item.Descripcion,
+                    Value = item.CategoriasProductoID.ToString()
+                });
+            }
+            ViewBag.CategoriasProductoID = listCategorias;
             return View();
         }
 
@@ -46,10 +60,11 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProductoID,nombre,CategoriaID,Estatus,Precio")] Producto producto)
+        public ActionResult Create([Bind(Include = "ProductoID,nombre,CategoriasProductoID,Precio")] Producto producto)
         {
             if (ModelState.IsValid)
             {
+                producto.Estatus = 1;
                 db.Producto.Add(producto);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -61,15 +76,28 @@ namespace MercaditoRecargado.Controllers
         // GET: Productoes/Edit/5
         public ActionResult Edit(int? id)
         {
+            List<SelectListItem> listCategorias;
+            var categoria = db.CategoriasProducto.ToList();
+            listCategorias = new List<SelectListItem>();
+            foreach (var item in categoria)
+            {
+                listCategorias.Add(new SelectListItem
+                {
+                    Text = item.Descripcion,
+                    Value = item.CategoriasProductoID.ToString()
+                });
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            
             Producto producto = db.Producto.Find(id);
             if (producto == null)
             {
                 return HttpNotFound();
             }
+            ViewBag.CategoriasProductoID = listCategorias;
             return View(producto);
         }
 
@@ -78,7 +106,7 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProductoID,nombre,CategoriaID,Estatus,Precio")] Producto producto)
+        public ActionResult Edit([Bind(Include = "ProductoID,nombre,CategoriasProductoID,Estatus,Precio")] Producto producto)
         {
             if (ModelState.IsValid)
             {
