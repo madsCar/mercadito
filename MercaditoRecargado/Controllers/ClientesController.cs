@@ -7,14 +7,53 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using IdentitySample.Models;
 using MercaditoRecargado.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace MercaditoRecargado.Controllers
 {
     public class ClientesController : Controller
     {
         private ClientesModelContext db = new ClientesModelContext();
-        private string FechaTemp;
+
+        public ClientesController()
+        {
+        }
+
+        public ClientesController(ApplicationUserManager userManager, ApplicationRoleManager roleManager)
+        {
+            UserManager = userManager;
+            RoleManager = roleManager;
+        }
+
+        private ApplicationUserManager _userManager;
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
+
+        private ApplicationRoleManager _roleManager;
+        public ApplicationRoleManager RoleManager
+        {
+            get
+            {
+                return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>();
+            }
+            private set
+            {
+                _roleManager = value;
+            }
+        }
+
         // GET: Clientes
         public ActionResult Index()
         {
@@ -92,7 +131,7 @@ namespace MercaditoRecargado.Controllers
 
             }
 
-            ViewBag.ClienteDatos = new SelectList(db.Personas, "PersonaID", "Nombre", cliente.ClienteDatos);
+            ViewBag.ClienteDatos = new SelectList(db.Personas, "PersonaID", "Nombre", cliente.PersonaID);
             return View(cliente);
         }
 
@@ -100,20 +139,24 @@ namespace MercaditoRecargado.Controllers
 
 
         // GET: Clientes/Edit/5
-        public ActionResult Edit(int? id)
+        public async System.Threading.Tasks.Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            
             Cliente cliente = db.Cliente.Find(id);
-            FechaTemp = cliente.Persona.FechaNac.ToString();
+            var user = await UserManager.FindByIdAsync(cliente.ClienteUser);
+            ClienteUsuario ClienteU = new ClienteUsuario();
+            ClienteU.Cliente = cliente as Cliente;
+            ClienteU.Usuario = user;
             if (cliente == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ClienteDatos = new SelectList(db.Personas, "PersonaID", "Nombre", cliente.ClienteDatos);
-            return View(cliente);
+            ViewBag.ClienteDatos = new SelectList(db.Personas, "PersonaID", "Nombre", cliente.PersonaID);
+            return View(ClienteU);
         }
 
         // POST: Clientes/Edit/5
@@ -121,19 +164,41 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Cliente cliente)
+        public async System.Threading.Tasks.Task<ActionResult> Edit(ClienteUsuario clienteU,  params string[] selectedRole)
         {
             if (ModelState.IsValid)
             {
-                 
-                db.Entry(cliente.Persona).State = EntityState.Modified;
+                var user = await UserManager.FindByIdAsync(clienteU.Cliente.ClienteUser);
+                user.UserName = clienteU.Usuario.Email;
+                user.Email = clienteU.Usuario.Email;
+                
+
+                var userRoles = await UserManager.GetRolesAsync(user.Id);
+
+                selectedRole = selectedRole ?? new string[] {"Cliente"};
+
+                var result = await UserManager.AddToRolesAsync(user.Id, selectedRole.Except(userRoles).ToArray<string>());
+
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("", result.Errors.First());
+                    return View();
+                }
+                result = await UserManager.RemoveFromRolesAsync(user.Id, userRoles.Except(selectedRole).ToArray<string>());
+
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("", result.Errors.First());
+                    return View();
+                }
+                db.Entry(clienteU.Cliente.Persona).State = EntityState.Modified;
           
-                db.Entry(cliente).State = EntityState.Modified;
+               // db.Entry(clienteU.Cliente).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ClienteDatos = new SelectList(db.Personas, "PersonaID", "Nombre", cliente.ClienteDatos);
-            return View(cliente);
+           // ViewBag.ClienteDatos = new SelectList(db.Personas, "PersonaID", "Nombre", cliente.Persona);
+            return View(clienteU.Cliente);
         }
 
         // GET: Clientes/Delete/5
@@ -154,10 +219,19 @@ namespace MercaditoRecargado.Controllers
         // POST: Clientes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async System.Threading.Tasks.Task<ActionResult> DeleteConfirmedAsync(int id)
         {
             Cliente cliente = db.Cliente.Find(id);
+            Persona persona = db.Personas.Find(cliente.PersonaID);
+
+            var user = await UserManager.FindByIdAsync(cliente.ClienteUser);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            var result = await UserManager.DeleteAsync(user);
             db.Cliente.Remove(cliente);
+            db.Personas.Remove(persona);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

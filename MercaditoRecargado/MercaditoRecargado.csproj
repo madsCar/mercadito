@@ -192,12 +192,17 @@
     <Compile Include="Migrations\202107311901549_Initial.Designer.cs">
       <DependentUpon>202107311901549_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202108031830575_segunda.cs" />
+    <Compile Include="Migrations\202108031830575_segunda.Designer.cs">
+      <DependentUpon>202108031830575_segunda.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdminViewModel.cs" />
     <Compile Include="Models\CategoriasProducto.cs" />
     <Compile Include="Models\Cliente.cs" />
     <Compile Include="Models\ClientesModelContext.cs" />
+    <Compile Include="Models\ClienteUsuario.cs" />
     <Compile Include="Models\DatosTarjeta.cs" />
     <Compile Include="Models\DireccionCliente.cs" />
     <Compile Include="Models\Empleado.cs" />
@@ -382,6 +387,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202107311901549_Initial.resx">
       <DependentUpon>202107311901549_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202108031830575_segunda.resx">
+      <DependentUpon>202108031830575_segunda.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

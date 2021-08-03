@@ -23,7 +23,7 @@ namespace MercaditoRecargado.Models
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public Nullable<System.DateTime> fechaRegistro { get; set; }
         public int Estatus { get; set; }
-        public int ClienteDatos { get; set; }
+        public int PersonaID { get; set; }
         public string ClienteUser { get; set; }
 
         public virtual Persona Persona { get; set; }
