@@ -9,6 +9,9 @@ namespace MercaditoRecargado.Models
     public class ClienteUsuario
     {
         public  ApplicationUser Usuario { get; set; }
+        public RegisterViewModel UsuarioR { get; set; }
+
+        
         public  Cliente Cliente { get; set; }
     }
 }

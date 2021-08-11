@@ -40,6 +40,13 @@ namespace MercaditoRecargado.Controllers
                 _userManager = value;
             }
         }
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error);
+            }
+        }
 
         private ApplicationRoleManager _roleManager;
         public ApplicationRoleManager RoleManager
@@ -76,6 +83,8 @@ namespace MercaditoRecargado.Controllers
             return View(cliente);
         }
 
+
+
         // GET: Clientes/Create
         public ActionResult Create()
         {
@@ -88,51 +97,36 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Cliente cliente)
+        public async System.Threading.Tasks.Task<ActionResult> Create(ClienteUsuario model)
         {
+           
+                var user = new ApplicationUser { UserName = model.Usuario.Email, Email = model.Usuario.Email };
+                var result = await UserManager.CreateAsync(user, model.UsuarioR.Password);
 
-            if (ModelState.IsValid)
-            {
-
-
-
-                // if (Request.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Empleado"))
-                // {
-                //      cliente.ClienteUser = null;
-                //  }
-                try
+                if (result.Succeeded)
                 {
+                    var result2 = await UserManager.AddToRolesAsync(user.Id, "Cliente");
+                    Cliente cliente = new Cliente();
+                    cliente = model.Cliente;
+                    cliente.Persona = model.Cliente.Persona;
                     cliente.fechaRegistro = DateTime.Now;
                     cliente.Estatus = 1;
-                    var datos = TempData["data"] as string;
-                    cliente.ClienteUser = datos;
+
+                    cliente.ClienteUser = user.Id;
                     db.Personas.Add(cliente.Persona);
                     db.Cliente.Add(cliente);
                     db.SaveChanges();
-                }
-                catch (DbEntityValidationException e)
-                {
-
-                    Console.WriteLine(e);
-                }
-
-                if (Request.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Empleado"))
-                {
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-
-                    return Redirect("~/Account/Login");
-                }
-
-
-
-
+                    var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
+                    //ViewBag.Link = callbackUrl;
+                  //  return View("DisplayEmail");
+                
+                AddErrors(result);
             }
 
-            ViewBag.ClienteDatos = new SelectList(db.Personas, "PersonaID", "Nombre", cliente.PersonaID);
-            return View(cliente);
+            // If we got this far, something failed, redisplay form
+            return RedirectToAction("Index");
         }
 
 
