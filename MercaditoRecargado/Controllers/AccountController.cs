@@ -155,14 +155,19 @@ namespace IdentitySample.Controllers
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
-                var result2 = await UserManager.AddToRolesAsync(user.Id, "Cliente");
-                if (result.Succeeded && result2.Succeeded)
+                
+                if (result.Succeeded)
                 {
-                    Cliente cliente = new Cliente();
+                    var result2 = await UserManager.AddToRolesAsync(user.Id, "Cliente");
+                    Cliente cliente;
                     cliente = model.Clientes;
                     cliente.Persona = model.Clientes.Persona;
                     cliente.fechaRegistro = DateTime.Now;
                     cliente.Estatus = 1;
+                    cliente.Persona.Ciudad = "XXX";
+                    cliente.Persona.CP = "XXX";
+                    cliente.Persona.Estado = "XXX";
+                    cliente.Persona.Domicilio = "XXX";
 
                     cliente.ClienteUser = user.Id;
                     db.Personas.Add(cliente.Persona);

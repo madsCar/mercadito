@@ -21,6 +21,8 @@ namespace MercaditoRecargado.Models
         public string nombre { get; set; }
        
         public int Estatus { get; set; }
+
+        public string Imagen { get; set; }
         public double Precio { get; set; }
         [Display(Name = "Categoría")]
         public int CategoriasProductoID { get; set; }

@@ -6,17 +6,42 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using MercaditoRecargado.Models;
+using Microsoft.AspNet.Identity;
 
 namespace MercaditoRecargado.Controllers
 {
+    [Authorize]
+   
     public class ProductoesController : Controller
     {
+       
         private ClientesModelContext db = new ClientesModelContext();
 
         // GET: Productoes
         public ActionResult Index()
         {
+           
+            if (Request.IsAuthenticated && User.IsInRole("Cliente"))
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
+            var producto = db.Producto.Include(c => c.CategoriasProducto);
+            return View(producto.ToList());
+        }
+
+        public ActionResult ProductoCliente()
+        {
+
+            if (Request.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Productoes");
+
+
+            }
             var producto = db.Producto.Include(c => c.CategoriasProducto);
             return View(producto.ToList());
         }
@@ -60,10 +85,11 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProductoID,nombre,CategoriasProductoID,Precio")] Producto producto)
+        public ActionResult Create([Bind(Include = "ProductoID,nombre,CategoriasProductoID,Precio,Imagen")] Producto producto)
         {
             if (ModelState.IsValid)
             {
+                producto.Precio = producto.Precio * 1.4;
                 producto.Estatus = 1;
                 db.Producto.Add(producto);
                 db.SaveChanges();
@@ -106,10 +132,11 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProductoID,nombre,CategoriasProductoID,Estatus,Precio")] Producto producto)
+        public ActionResult Edit([Bind(Include = "ProductoID,nombre,CategoriasProductoID,Estatus,Precio,Imagen")] Producto producto)
         {
             if (ModelState.IsValid)
             {
+                producto.Precio = producto.Precio * 1.4;
                 db.Entry(producto).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");

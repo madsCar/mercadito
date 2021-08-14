@@ -1,4 +1,28 @@
-﻿<!DOCTYPE html>
+﻿@using MercaditoRecargado.Models;
+
+@{
+
+    double totaltmp = 0;
+    List<Item> cart = new List<Item>();
+    if (Session["cart"] != null)
+    {
+        cart = (List<Item>)Session["cart"];
+
+        foreach (Item item in cart)
+        {
+
+            totaltmp = totaltmp + item.Producto.Precio * item.Quantity;
+
+        }
+    }
+    else
+    {
+        cart = null;
+    }
+
+    }
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -132,9 +156,7 @@
                     <select class="form-select flex-shrink-0" style="width: 14rem;">
                         <option>Todas las categorias</option>
                         <option>Frutas</option>
-                        <option>Vegetales</option>
-                        <option>Semillas</option>
-                        <option>Legumbres</option>
+                       
                     </select>
                 </div>
                 <!-- Toolbar-->
@@ -154,166 +176,203 @@
                         </a>*@
                     @Html.Partial("_LoginPartial")
                     <div class="navbar-tool dropdown ms-3">
-                        <a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="grocery-checkout.html"><span class="navbar-tool-label">3</span><i class="navbar-tool-icon bi bi-cart3"></i></a><a class="navbar-tool-text" href="grocery-checkout.html"><small>Mi Carrito</small>$25.00</a>
+                        <a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="@Url.Action("Create","VentaDetalles")">
+
+                            @if (Session["cart"] != null)
+                            {
+                                <span class="navbar-tool-label">
+                                    @cart.Count
+                                </span><i class="navbar-tool-icon bi bi-cart3"></i>
+                            }
+                            else
+                            {
+                                <span class="navbar-tool-label">
+                                    0
+                                </span><i class="navbar-tool-icon bi bi-cart3"></i>
+                            }
+
+
+                        </a><a class="navbar-tool-text" href="@Url.Action("Create","VentaDetalles")"><small>Mi Carrito</small>$@totaltmp.00</a>
                         <div class="dropdown-menu dropdown-menu-end">
                             <div class="widget widget-cart px-3 pt-2 pb-3" style="width: 20rem;">
                                 <div style="height: 15rem;" data-simplebar data-simplebar-auto-hide="false">
-                                    <div class="widget-cart-item pb-2 border-bottom">
-                                        <button class="btn-close text-danger" type="button" aria-label="Remove"><span aria-hidden="true">&times;</span></button>
-                                        <div class="d-flex align-items-center">
-                                            <a class="d-block" href="grocery-single.html"><img src="img/grocery/cart/th01.jpg" width="64" alt="Product"></a>
-                                            <div class="ps-2">
-                                                <h6 class="widget-product-title"><a href="grocery-single.html">Frozen Oven-ready Poultry</a></h6>
-                                                <div class="widget-product-meta"><span class="text-accent me-2">$15.<small>00</small></span><span class="text-muted">x 1</span></div>
+
+                                    @if (Session["cart"] != null)
+                                    {
+
+
+                                        foreach (Item item in cart)
+                                        {
+                                            <div class="widget-cart-item pb-2 border-bottom">
+                                                <button class="btn-close text-danger" type="button" href="@Url.Action("Remove", "Cart", new { id = item.Producto.ProductoID })" aria-label="Remove"><span aria-hidden="true">&times;</span></button>
+                                                <div class="d-flex align-items-center">
+                                                    <a class="d-block" href="grocery-single.html"><img src="~/img/@item.Producto.Imagen" width="64" alt="Product"></a>
+                                                    <div class="ps-2">
+                                                        <h6 class="widget-product-title">@item.Producto.nombre</h6>
+                                                        <div class="widget-product-meta"><span class="text-accent me-2">$@item.Producto.Precio.<small>00</small></span><span class="text-muted">x @item.Quantity =  $@(item.Producto.Precio * item.Quantity).<small>00</small></span></div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
+
+
+
+
+                                        }
+                                        
+
+                                           
+                                        }
+
+
+
+
+
                                     </div>
-                                    <div class="widget-cart-item py-2 border-bottom">
-                                        <button class="btn-close text-danger" type="button" aria-label="Remove"><span aria-hidden="true">&times;</span></button>
-                                        <div class="d-flex align-items-center">
-                                            <a class="d-block" href="grocery-single.html"><img src="img/grocery/cart/th02.jpg" width="64" alt="Product"></a>
-                                            <div class="ps-2">
-                                                <h6 class="widget-product-title"><a href="grocery-single.html">Nut Chocolate Paste (750g)</a></h6>
-                                                <div class="widget-product-meta"><span class="text-accent me-2">$6.<small>50</small></span><span class="text-muted">x 1</span></div>
-                                            </div>
-                                        </div>
+                                    <div class="d-flex flex-wrap justify-content-between align-items-center pt-3">
+                                        <div class="fs-sm me-2 py-2"><span class="text-muted">Total:</span><span class="text-accent fs-base ms-1">$@totaltmp.<small>00</small></span></div><a class="btn btn-primary btn-sm" href="@Url.Action("Create","VentaDetalles")"><i class="ci-card me-2 fs-base align-middle"></i>Checkout<i class="ci-arrow-right ms-1 me-n1"></i></a>
                                     </div>
-                                    <div class="widget-cart-item py-2 border-bottom">
-                                        <button class="btn-close text-danger" type="button" aria-label="Remove"><span aria-hidden="true">&times;</span></button>
-                                        <div class="d-flex align-items-center">
-                                            <a class="d-block" href="grocery-single.html"><img src="img/grocery/cart/th03.jpg" width="64" alt="Product"></a>
-                                            <div class="ps-2">
-                                                <h6 class="widget-product-title"><a href="grocery-single.html">Mozzarella Mini Cheese</a></h6>
-                                                <div class="widget-product-meta"><span class="text-accent me-2">$3.<small>50</small></span><span class="text-muted">x 1</span></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="d-flex flex-wrap justify-content-between align-items-center pt-3">
-                                    <div class="fs-sm me-2 py-2"><span class="text-muted">Total:</span><span class="text-accent fs-base ms-1">$25.<small>00</small></span></div><a class="btn btn-primary btn-sm" href="grocery-checkout.html"><i class="ci-card me-2 fs-base align-middle"></i>Checkout<i class="ci-arrow-right ms-1 me-n1"></i></a>
+
+
+
+
+
+
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Search collapse-->
-        <div class="collapse" id="searchBox">
-            <div class="card pt-2 pb-4 border-0 rounded-0">
-                <div class="container">
-                    <div class="input-group">
-                        <i class="ci-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
-                        <input class="form-control rounded-start" type="text" placeholder="Search for products">
+            <!-- Search collapse-->
+            <div class="collapse" id="searchBox">
+                <div class="card pt-2 pb-4 border-0 rounded-0">
+                    <div class="container">
+                        <div class="input-group">
+                            <i class="ci-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
+                            <input class="form-control rounded-start" type="text" placeholder="Search for products">
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                </div>
-            </div>
-        </main>
-    </div>
-
-    @*@RenderBody()*@
-    <hr />
-    <footer class="footer bg-dark pt-5">
-        <div class="px-lg-3 pt-2 pb-4">
-            <div class="mx-auto px-3" style="max-width: 80rem;">
-                <div class="row">
-                    <div class="col-xl-2 col-lg-3 col-sm-4 pb-2 mb-4">
-                        <div class="mt-n1"><a class="d-inline-block align-middle" href="#"><img class="d-block mb-4" src="img/footer-logo-light.png" width="117" alt="Cartzilla"></a></div>
-
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-4">
-                        <div class="widget widget-links widget-light pb-2 mb-4">
-                            <h3 class="widget-title text-light">Catálogo de Productos</h3>
-                            <ul class="widget-list">
-                                <li class="widget-list-item"><a class="widget-list-link" href="#">Special offers</a></li>
-                                <li class="widget-list-item"><a class="widget-list-link" href="#">Bakery</a></li>
-                                <li class="widget-list-item"><a class="widget-list-link" href="#">Fruits and Vegetables</a></li>
-                                <li class="widget-list-item"><a class="widget-list-link" href="#">Dairy and Eggs</a></li>
-                                <li class="widget-list-item"><a class="widget-list-link" href="#">Meat and Poultry</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-4 col-sm-4">
-                        <div class="widget widget-links widget-light pb-2 mb-4">
-                            <h3 class="widget-title text-light">Compañia</h3>
-                            <ul class="widget-list">
-                                <li class="widget-list-item"><a>@Html.ActionLink("Nosotros", "About", "Home")</a></li>
-                                <li class="widget-list-item"><a> @Html.ActionLink("Contacto", "Contact", "Home")</a></li>
-                                <li class="widget-list-item"><a class="widget-list-link" href="#">Centro de Ayuda</a></li>
-                            </ul>
-                        </div>
-                        <div class="widget widget-light pb-2 mb-4">
-                            <h3 class="widget-title text-light">Siguenos</h3><a class="btn-social bs-light bs-twitter me-2 mb-2" href="#"><i class="ci-twitter"></i></a><a class="btn-social bs-light bs-facebook me-2 mb-2" href="#"><i class="ci-facebook"></i></a><a class="btn-social bs-light bs-instagram me-2 mb-2" href="#"><i class="ci-instagram"></i></a><a class="btn-social bs-light bs-youtube me-2 mb-2" href="#"><i class="ci-youtube"></i></a>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-sm-8">
-                        <div class="widget pb-2 mb-4">
-                            <h3 class="widget-title text-light pb-1">Stay informed</h3>
-                            <form class="subscription-form validate" action="https://studio.us12.list-manage.com/subscribe/post?u=c7103e2c981361a6639545bd5&amp;amp;id=29ca296126" method="post" name="mc-embedded-subscribe-form" target="_blank" novalidate>
-                                <div class="input-group flex-nowrap">
-                                    <i class="ci-mail position-absolute top-50 translate-middle-y text-muted fs-base ms-3"></i>
-                                    <input class="form-control rounded-start" type="email" name="EMAIL" placeholder="Your email" required>
-                                    <button class="btn btn-primary" type="submit" name="subscribe">Subscribe*</button>
-                                </div>
-                                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-                                <div style="position: absolute; left: -5000px;" aria-hidden="true">
-                                    <input class="subscription-form-antispam" type="text" name="b_c7103e2c981361a6639545bd5_29ca296126" tabindex="-1">
-                                </div>
-                                <div class="form-text text-light opacity-50">*Subscribe to our newsletter to receive early discount offers, updates and new products info.</div>
-                                <div class="subscription-status"></div>
-                            </form>
-                        </div>
-
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
-        <div class="bg-darker px-lg-3 py-3">
-            <div class="d-sm-flex justify-content-between align-items-center mx-auto px-3" style="max-width: 80rem;">
-                <div class="fs-xs text-light opacity-50 text-center text-sm-start py-3">© All rights reserved. Made by <a class="text-light" href="https://createx.studio/" target="_blank" rel="noopener">Createx Studio</a></div>
-                <div class="py-3"><img class="d-block mx-auto mx-sm-start" src="img/cards-alt.png" width="187" alt="Payment methods"></div>
+
+        @*@RenderBody()*@
+        <hr />
+        <footer class="footer bg-dark pt-5">
+            <div class="px-lg-3 pt-2 pb-4">
+                <div class="mx-auto px-3" style="max-width: 80rem;">
+                    <div class="row">
+                        <div class="col-xl-2 col-lg-3 col-sm-4 pb-2 mb-4">
+                            <div class="mt-n1"><a class="d-inline-block align-middle" href="#"><img class="d-block mb-4" src="img/footer-logo-light.png" width="117" alt="Cartzilla"></a></div>
+
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-sm-4">
+                            <div class="widget widget-links widget-light pb-2 mb-4">
+                                <h3 class="widget-title text-light">Catálogo de Productos</h3>
+                                <ul class="widget-list">
+                                    <li class="widget-list-item"><a class="widget-list-link" href="#">Special offers</a></li>
+                                    <li class="widget-list-item"><a class="widget-list-link" href="#">Bakery</a></li>
+                                    <li class="widget-list-item"><a class="widget-list-link" href="#">Fruits and Vegetables</a></li>
+                                    <li class="widget-list-item"><a class="widget-list-link" href="#">Dairy and Eggs</a></li>
+                                    <li class="widget-list-item"><a class="widget-list-link" href="#">Meat and Poultry</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-4 col-sm-4">
+                            <div class="widget widget-links widget-light pb-2 mb-4">
+                                <h3 class="widget-title text-light">Compañia</h3>
+                                <ul class="widget-list">
+                                    <li class="widget-list-item"><a>@Html.ActionLink("Nosotros", "About", "Home")</a></li>
+                                    <li class="widget-list-item"><a> @Html.ActionLink("Contacto", "Contact", "Home")</a></li>
+                                    <li class="widget-list-item"><a class="widget-list-link" href="#">Centro de Ayuda</a></li>
+                                </ul>
+                            </div>
+                            <div class="widget widget-light pb-2 mb-4">
+                                <h3 class="widget-title text-light">Siguenos</h3><a class="btn-social bs-light bs-twitter me-2 mb-2" href="#"><i class="ci-twitter"></i></a><a class="btn-social bs-light bs-facebook me-2 mb-2" href="#"><i class="ci-facebook"></i></a><a class="btn-social bs-light bs-instagram me-2 mb-2" href="#"><i class="ci-instagram"></i></a><a class="btn-social bs-light bs-youtube me-2 mb-2" href="#"><i class="ci-youtube"></i></a>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-8">
+                            <div class="widget pb-2 mb-4">
+                                <h3 class="widget-title text-light pb-1">Stay informed</h3>
+                                <form class="subscription-form validate" action="https://studio.us12.list-manage.com/subscribe/post?u=c7103e2c981361a6639545bd5&amp;amp;id=29ca296126" method="post" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+                                    <div class="input-group flex-nowrap">
+                                        <i class="ci-mail position-absolute top-50 translate-middle-y text-muted fs-base ms-3"></i>
+                                        <input class="form-control rounded-start" type="email" name="EMAIL" placeholder="Your email" required>
+                                        <button class="btn btn-primary" type="submit" name="subscribe">Subscribe*</button>
+                                    </div>
+                                    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                                    <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                                        <input class="subscription-form-antispam" type="text" name="b_c7103e2c981361a6639545bd5_29ca296126" tabindex="-1">
+                                    </div>
+                                    <div class="form-text text-light opacity-50">*Subscribe to our newsletter to receive early discount offers, updates and new products info.</div>
+                                    <div class="subscription-status"></div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </footer>
+            <div class="bg-darker px-lg-3 py-3">
+                <div class="d-sm-flex justify-content-between align-items-center mx-auto px-3" style="max-width: 80rem;">
+                    <div class="fs-xs text-light opacity-50 text-center text-sm-start py-3">© All rights reserved. Made by <a class="text-light" href="https://createx.studio/" target="_blank" rel="noopener">Createx Studio</a></div>
+                    <div class="py-3"><img class="d-block mx-auto mx-sm-start" src="img/cards-alt.png" width="187" alt="Payment methods"></div>
+                </div>
+            </div>
+        </footer>
 
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-    <script src="~/Scripts/popper.min.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
-    <script>
-        $("body").on("click", "#LoginPartial,#RegisterPartial,#ForgotPasswordPartial", function () {
-            var url = "/?handler=" + $(this).attr("id");
-            console.log(url)
-            $.ajax({
-                url: url,
-                success: function (data) {
-                    $("#exampleModal .modal-dialog").html(data);
-                    $("#exampleModal").modal("show");
-                }
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+        <script src="~/Scripts/popper.min.js"></script>
+        <script src="~/Scripts/bootstrap.min.js"></script>
+        <script>
+            $("body").on("click", "#LoginPartial,#RegisterPartial,#ForgotPasswordPartial", function () {
+                var url = "/?handler=" + $(this).attr("id");
+                console.log(url)
+                $.ajax({
+                    url: url,
+                    success: function (data) {
+                        $("#exampleModal .modal-dialog").html(data);
+                        $("#exampleModal").modal("show");
+                    }
+                });
             });
-        });
-    </script>
-    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
-    <!--<script src="../../assets/js/vendor/holder.min.js"></script>-->
+        </script>
+        <script>
+            $("a[href='/VentaDetalles/Create'] > span.navbar-tool-label").parent().click(function (event) {
+                event.preventDefault();
+                console.log("event prevented!");
+                //var ammount = parseInt($.trim($(this).find("span.navbar-tool-label").text()));
+                var ammount = @(cart != null ? cart.Count : 0);
+                if (ammount === 0) {
+                    alert("debes agregar productos al carrito primero");
+                } else {
+                    window.location.href = '/VentaDetalles/Create';
+                }
+                console.log(ammount);
+            });
+        </script>
+        <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+        <!--<script src="../../assets/js/vendor/holder.min.js"></script>-->
 
-</body>
+    </body>
 </html>

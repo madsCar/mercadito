@@ -38,7 +38,7 @@ namespace MercaditoRecargado.Models
         [Display(Name = "Fecha de nacimiento")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
-        public Nullable<System.DateTime> FechaNac { get; set; }
+        public DateTime? FechaNac { get; set; }
 
 
 
@@ -71,15 +71,16 @@ namespace MercaditoRecargado.Models
         [Required]
         public string CP { get; set; }
 
-        public string CURP { get; set; }
-
         public string RFC { get; set; }
 
-        // [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public string CURP { get; set; }
+    
+
+       
         public virtual ICollection<Cliente> Clientes { get; set; }
-        //  [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+      
         public virtual ICollection<DireccionCliente> DireccionClientes { get; set; }
-        // [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+      
         public virtual ICollection<Empleado> Empleadoes { get; set; }
     }
 }

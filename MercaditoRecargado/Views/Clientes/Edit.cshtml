@@ -67,13 +67,7 @@
         </div>
     </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Cliente.Persona.Domicilio, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Cliente.Persona.Domicilio, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Cliente.Persona.Domicilio, "", new { @class = "text-danger" })
-        </div>
-    </div>
+
 
 
     <div class="form-group">
@@ -84,35 +78,16 @@
         </div>
     </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Cliente.Persona.Estado, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Cliente.Persona.Estado, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Cliente.Persona.Estado, "", new { @class = "text-danger" })
-        </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Cliente.Persona.Ciudad, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Cliente.Persona.Ciudad, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Cliente.Persona.Ciudad, "", new { @class = "text-danger" })
-        </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.Cliente.Persona.CP, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Cliente.Persona.CP, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Cliente.Persona.CP, "", new { @class = "text-danger" })
-        </div>
-    </div>
+
+
 
     <div class="form-group">
 
         <div class="col-md-10">
             @Html.HiddenFor(model => model.Cliente.fechaRegistro, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Cliente.fechaRegistro, "", new { @class = "text-danger" })
+          
         </div>
     </div>
 
@@ -120,7 +95,7 @@
 
         <div class="col-md-10">
             @Html.HiddenFor(model => model.Cliente.ClienteUser, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Cliente.ClienteUser, "", new { @class = "text-danger" })
+          
         </div>
     </div>
 
@@ -128,25 +103,41 @@
 
         <div class="col-md-10">
             @Html.HiddenFor(model => model.Cliente.Estatus, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Cliente.Estatus, "", new { @class = "text-danger" })
+          
         </div>
     </div>
 
     <div class="form-group">
 
         <div class="col-md-10">
-            @Html.HiddenFor(model => model.Cliente.Persona.RFC, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Cliente.Persona.RFC, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Cliente.Persona.CP, new { htmlAttributes = new { @class = "form-control" } })
+          
         </div>
     </div>
 
     <div class="form-group">
 
         <div class="col-md-10">
-            @Html.HiddenFor(model => model.Cliente.Persona.CURP, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Cliente.Persona.CURP, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Cliente.Persona.Estado, new { htmlAttributes = new { @class = "form-control" } })
+       
         </div>
     </div>
+    <div class="form-group">
+
+        <div class="col-md-10">
+            @Html.HiddenFor(model => model.Cliente.Persona.Ciudad, new { htmlAttributes = new { @class = "form-control" } })
+          
+        </div>
+    </div>
+
+    <div class="form-group">
+
+        <div class="col-md-10">
+            @Html.HiddenFor(model => model.Cliente.Persona.Domicilio, new { htmlAttributes = new { @class = "form-control" } })
+          
+        </div>
+    </div>
+
 
     <div class="form-group">
 

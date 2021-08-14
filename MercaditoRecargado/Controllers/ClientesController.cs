@@ -64,7 +64,11 @@ namespace MercaditoRecargado.Controllers
         // GET: Clientes
         public ActionResult Index()
         {
-            var clientes = db.Cliente.Include(c => c.Persona);
+           
+            //var user = User.Identity.GetUserId();
+            // var clientes = db.Cliente.SqlQuery("select ClienteID from Clientes where Clientes.ClienteUser = '"+user+"'");
+           // Cliente cliente = db.Cliente.Find(clientes);
+             var clientes = db.Cliente.Include(c => c.Persona);
             return View(clientes.ToList());
         }
 
@@ -111,6 +115,10 @@ namespace MercaditoRecargado.Controllers
                     cliente.Persona = model.Cliente.Persona;
                     cliente.fechaRegistro = DateTime.Now;
                     cliente.Estatus = 1;
+                    cliente.Persona.Ciudad = "XXX";
+                    cliente.Persona.CP = "XXX";
+                    cliente.Persona.Estado = "XXX";
+                    cliente.Persona.Domicilio = "XXX";
 
                     cliente.ClienteUser = user.Id;
                     db.Personas.Add(cliente.Persona);
