@@ -1,50 +1,108 @@
-﻿@model MercaditoRecargado.Models.VentaDetalle
+﻿@model MercaditoRecargado.Models.Venta
 
 @{
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+
 
 <div>
-    <h4>VentaDetalle</h4>
+    <h2>Detalle de la venta: @Html.DisplayFor(model => model.VentaID) </h2>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Producto.nombre)
-        </dt>
+    <table class="table">
 
-        <dd>
-            @Html.DisplayFor(model => model.Producto.nombre)
-        </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FolioVenta)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.FolioVenta)
-        </dd>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => model.fechaVenta)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.fechaVenta)
+            </td>
+        </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Precio)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Precio)
-        </dd>
+        <tr>
+            <td>
+                @Html.DisplayNameFor(model => model.Total)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Total)
+            </td>
+        </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.cantidad)
-        </dt>
+        <tr>
+            <td>
+                IVA
+            </td>
+            <td>
+                @(Model.Total * (decimal)0.16)
+            </td>
+        </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.cantidad)
-        </dd>
 
-    </dl>
+        <tr>
+            <td>
+                Total
+            </td>
+            <td>
+                @(Model.Total + (Model.Total * (decimal)0.16))
+            </td>
+        </tr>
+
+
+
+
+    </table>
+
+        <h2>Detalles</h2>
+
+        <table class="table">
+            <tr>
+
+
+                <th>
+                    Nombre
+                </th>
+
+                <th>
+                    Precio
+                </th>
+                <th>
+                    Cantidad
+                </th>
+                <th>
+                    Total
+                </th>
+
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model.VentaDetalles)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Producto.nombre)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Precio)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Cantidad)
+                    </td>
+
+                    <td>
+                        @(item.Precio * item.Cantidad)
+                    </td>
+                </tr>
+            }
+
+        </table>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.VentaDetalleID }) |
+  
     @Html.ActionLink("Back to List", "Index")
 </p>

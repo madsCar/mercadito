@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MercaditoRecargado.Models.VentaDetalle>
+﻿@model IEnumerable<MercaditoRecargado.Models.Venta>
 
 @{
     ViewBag.Title = "Index";
@@ -12,40 +12,53 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Producto.nombre)
+            @Html.DisplayNameFor(model => model.VentaID)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FolioVenta)
+            @Html.DisplayNameFor(model => model.fechaVenta)
         </th>
+
         <th>
-            @Html.DisplayNameFor(model => model.Precio)
+            @Html.DisplayNameFor(model => model.Total)
         </th>
+
         <th>
-            @Html.DisplayNameFor(model => model.cantidad)
+            IVA
         </th>
+
+        <th>
+            Total
+        </th>
+       
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Producto.nombre)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FolioVenta)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Precio)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.cantidad)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.VentaDetalleID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.VentaDetalleID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.VentaDetalleID })
-        </td>
-    </tr>
+<tr>
+
+    <td>
+        @Html.DisplayFor(modelItem => item.VentaID)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.fechaVenta)
+    </td>
+
+    <td>
+        @Html.DisplayFor(modelItem => item.Total)
+    </td>
+    <td>
+       @(item.Total * (decimal)0.16)
+    </td>
+    <td>
+      @(item.Total + (item.Total * (decimal)0.16))
+    </td>
+
+    <td>
+       
+        @Html.ActionLink("Details", "Details", new { id = item.VentaID }) |
+     
+    </td>
+</tr>
 }
 
 </table>

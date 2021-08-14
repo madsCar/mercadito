@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Data.Entity;
 using IdentitySample.Models;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace MercaditoRecargado.Models
 {
@@ -15,6 +16,7 @@ namespace MercaditoRecargado.Models
         {
             base.OnModelCreating(modelBuilder);
         }
+           
 
         //Definimos todos lo datasets
         public virtual DbSet<Persona> Personas { get; set; }
