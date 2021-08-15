@@ -25,9 +25,46 @@ namespace MercaditoRecargado.Controllers
 
 
             }
-            var venta = db.Venta.Include(v => v.VentaDetalles);
+            var venta = db.Venta.Include(v => v.Cliente.Persona);
             
             return View(venta.ToList());
+        }
+
+        public ActionResult PedidosEmpleado()
+        {
+            if (Request.IsAuthenticated && User.IsInRole("Cliente"))
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
+          
+            var user = User.Identity.GetUserId();
+            var empleado = db.Empleado.SqlQuery("select * from Empleadoes where Empleadoes.EmlpleadoUser = '" + user + "'").ToList();
+            Empleado _empleado = new Empleado(); 
+            
+     
+            foreach (var item in empleado)
+            {
+                _empleado = item;
+
+            }
+
+            var _venta = db.Venta.Include(v => v.Cliente.Persona);
+            List<Venta> listVenta;
+           
+            listVenta = new List<Venta>();
+            foreach (var item in _venta)
+            {
+                if(item.EmpleadoID == _empleado.EmpleadoID)
+                {
+                    listVenta.Add(item);
+                }
+               
+
+            }
+
+            return View(listVenta.ToList());
         }
 
         // GET: VentaDetalles/Details/5
@@ -47,6 +84,20 @@ namespace MercaditoRecargado.Controllers
                     venta.VentaDetalles.Add(x);
                 }
             }
+            List<SelectListItem> listEmpleado;
+            var empleado = db.Empleado.ToList();
+            listEmpleado = new List<SelectListItem>();
+            foreach (var item in empleado)
+            {
+                if (item.puesto.Equals("Repartidor")) {
+                    listEmpleado.Add(new SelectListItem
+                    {
+                        Text = item.Persona.Nombre + " " + item.Persona.ApPaterno + " " + item.Persona.ApMaterno,
+                        Value = item.EmpleadoID.ToString()
+                    });
+                }
+            }
+            ViewBag.EmpleadoID = listEmpleado;
 
             if (venta == null)
             {
@@ -55,8 +106,24 @@ namespace MercaditoRecargado.Controllers
             return View(venta);
         }
 
-        // GET: VentaDetalles/Create
-        public ActionResult Create()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public ActionResult Details(Venta venta)
+        {
+            if (ModelState.IsValid)
+            {
+                venta.Estatus = "En proceso";
+                db.Entry(venta).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View();
+        }
+
+            // GET: VentaDetalles/Create
+            public ActionResult Create()
         {
             if (Session["cart"] == null)
             {
@@ -150,8 +217,12 @@ namespace MercaditoRecargado.Controllers
             }
 
             venta.fechaVenta = DateTime.Now;
+            
             venta.Total = (decimal)total;
+            venta.Estatus = "Creado";
+            venta.RequirioFactura = 0;
             db.Venta.Add(venta);
+            db.SaveChanges();
             // if (ModelState.IsValid)
             // {
 
@@ -164,9 +235,9 @@ namespace MercaditoRecargado.Controllers
                 vdetalle.ProductoID = item.Producto.ProductoID;
                 db.VentaDetalle.Add(vdetalle);
                 db.SaveChanges();
-                Session["cart"] = null;
+                
             }
-
+            Session["cart"] = null;
             return RedirectToAction("ProductoCliente", "Productoes");
            // }
 

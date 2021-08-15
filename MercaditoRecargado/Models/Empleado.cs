@@ -18,5 +18,6 @@ namespace MercaditoRecargado.Models
 
         //public virtual AspNetUser AspNetUser { get; set; }
         public virtual Persona Persona { get; set; }
+        public virtual ICollection<Venta> Ventas { get; set; }
     }
 }

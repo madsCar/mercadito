@@ -14,14 +14,17 @@ namespace MercaditoRecargado.Models
             this.VentaDetalles = new HashSet<VentaDetalle>();
         }
 
+
+        [Display(Name = "Folio pedido")]
         public int VentaID { get; set; }
 
         public int clienteID { get; set; }
-        [DataType(DataType.DateTime)]
+        [Display(Name = "Fecha pedido")]
+        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy-HH:mm:ss}", ApplyFormatInEditMode = true)]
         public System.DateTime fechaVenta { get; set; }
 
-        [Display(Name = "Subtotal")]
+        [Display(Name = "Total")]
         public decimal Total { get; set; }
 
         [Display(Name = "Fecha de entrega")]
@@ -30,11 +33,13 @@ namespace MercaditoRecargado.Models
         [Required]
         public System.DateTime FechaEntrega { get; set; }
 
-        [StringLength(60, MinimumLength = 10)]
-        [Required]
+        [StringLength(60, MinimumLength = 5)]
         public string HoraEntrega { get; set; }
+
+
         [Display(Name = "Estatus del Pedido")]
         public string Estatus { get; set; }
+        public int? EmpleadoID { get; set; }
 
         [Required]
         public int DatosTarjetaID { get; set; }
@@ -43,6 +48,7 @@ namespace MercaditoRecargado.Models
         public int RequirioFactura { get; set; }
 
         public virtual Cliente Cliente { get; set; }
+        public virtual Empleado Empleado { get; set; }
         public virtual DatosTarjeta DatosTarjeta { get; set; }
         public virtual DireccionCliente DireccionCliente { get; set; }
 

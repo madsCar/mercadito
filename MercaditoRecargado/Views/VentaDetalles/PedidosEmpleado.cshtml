@@ -1,0 +1,63 @@
+﻿@model IEnumerable<MercaditoRecargado.Models.Venta>
+
+@{
+    ViewBag.Title = "PedidosEmpleado";
+}
+
+<h2>Pedidos</h2>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.VentaID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fechaVenta)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FechaEntrega)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Total)
+        </th>
+
+
+        <th>
+            @Html.DisplayNameFor(model => model.Estatus)
+        </th>
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.VentaID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.fechaVenta)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaEntrega) a las  @Html.DisplayFor(modelItem => item.HoraEntrega)
+            </td>
+            <td>
+                $ @Html.DisplayFor(modelItem => item.Total)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Estatus)
+            </td>
+
+
+            <td>
+
+                @Html.ActionLink("Detalles", "Edit", new { id = item.VentaID }) |
+
+            </td>
+        </tr>
+    }
+
+</table>

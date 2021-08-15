@@ -4,11 +4,9 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Pedidos</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+
 <table class="table">
     <tr>
         <th>
@@ -17,19 +15,18 @@
         <th>
             @Html.DisplayNameFor(model => model.fechaVenta)
         </th>
-
+        <th>
+            @Html.DisplayNameFor(model => model.FechaEntrega)
+        </th>
         <th>
             @Html.DisplayNameFor(model => model.Total)
         </th>
 
-        <th>
-            IVA
-        </th>
 
         <th>
-            Total
+            @Html.DisplayNameFor(model => model.Estatus)
         </th>
-       
+
         <th></th>
     </tr>
 
@@ -42,21 +39,22 @@
     <td>
         @Html.DisplayFor(modelItem => item.fechaVenta)
     </td>
-
     <td>
-        @Html.DisplayFor(modelItem => item.Total)
+        @Html.DisplayFor(modelItem => item.FechaEntrega) a las  @Html.DisplayFor(modelItem => item.HoraEntrega)
     </td>
     <td>
-       @(item.Total * (decimal)0.16)
-    </td>
-    <td>
-      @(item.Total + (item.Total * (decimal)0.16))
+        $ @Html.DisplayFor(modelItem => item.Total)
     </td>
 
     <td>
-       
-        @Html.ActionLink("Details", "Details", new { id = item.VentaID }) |
-     
+        @Html.DisplayFor(modelItem => item.Estatus)
+    </td>
+
+
+    <td>
+
+        @Html.ActionLink("Detalles", "Details", new { id = item.VentaID }) |
+
     </td>
 </tr>
 }
