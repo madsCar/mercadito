@@ -4,55 +4,123 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
 
-<div>
-    <h4>Venta</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.clienteVenta)
-        </dt>
+    <div class="form-horizontal">
+        <div>
+            <h2>Detalle del pedido: @Html.DisplayFor(model => model.VentaID) | Estado: @Html.DisplayFor(model => model.Estatus)</h2>
+            <hr />
+            <table class="table">
 
-        <dd>
-            @Html.DisplayFor(model => model.clienteVenta)
-        </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.fechaVenta)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.fechaVenta)
-        </dd>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.FechaEntrega)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.FechaEntrega) a las @Html.DisplayFor(model => model.HoraEntrega)
+                    </td>
+                </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TarjetaVenta)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.TarjetaVenta)
-        </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.DireccionVenta)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.DireccionVenta)
-        </dd>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Empleado.Persona.Nombre) Empleado
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Empleado.Persona.Nombre) @Html.DisplayFor(model => model.Empleado.Persona.ApPaterno)  @Html.DisplayFor(model => model.Empleado.Persona.ApMaterno)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.DireccionCliente.Calle)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.DireccionCliente.Calle) @Html.DisplayFor(model => model.DireccionCliente.NumeroExterior),  @Html.DisplayFor(model => model.DireccionCliente.NumeroInterior), Colonia @Html.DisplayFor(model => model.DireccionCliente.Colonia), CP @Html.DisplayFor(model => model.DireccionCliente.CodigoPostal)
+                    </td>
+                </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.RequirioFactura)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.RequirioFactura)
-        </dd>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Total)
+                    </td>
+                    <td>
+                        $@Html.DisplayFor(model => model.Total)
+                    </td>
+                </tr>
 
-    </dl>
-</div>
+
+
+            </table>
+        
+
+
+
+
+            <br>
+
+            <h2>Productos</h2>
+
+            <table class="table">
+                <tr>
+
+
+                    <th>
+                        Nombre
+                    </th>
+
+                    <th>
+                        Precio
+                    </th>
+                    <th>
+                        Cantidad
+                    </th>
+                    <th>
+                        Total
+                    </th>
+
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model.VentaDetalles)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Producto.nombre)
+                        </td>
+
+                        <td>
+                            $@Html.DisplayFor(modelItem => item.Precio)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Cantidad) Kg
+                        </td>
+
+                        <td>
+                            $@(item.Precio * item.Cantidad) 
+                        </td>
+                    </tr>
+                }
+
+            </table>
+
+
+          
+        </div>
+    </div>
+}
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.VentaID }) |
-    @Html.ActionLink("Back to List", "Index")
+
+    @Html.ActionLink("Regresar", "Index")
 </p>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

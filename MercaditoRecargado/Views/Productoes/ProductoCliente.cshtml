@@ -18,21 +18,22 @@
 
                 <div class="col mb-5">
                     <div class="card h-100">
+                        @Html.DisplayFor(modelItem => item.CategoriasProducto.Descripcion)
                         <!-- Product image-->
                         <img class="card-img-top" src="~/img/@Html.DisplayFor(modelItem => item.Imagen)" alt="..." />
                         <!-- Product details-->
-                        @Html.DisplayFor(modelItem => item.CategoriasProducto.Descripcion)
+
                         <div class="card-body p-4">
                             <div class="text-center">
                                 <!-- Product name-->
                                 <h5 class="fw-bolder">   @Html.DisplayFor(modelItem => item.nombre)</h5>
                                 <!-- Product price-->
-                               $ @Html.DisplayFor(modelItem => item.Precio)<small>.00</small>
+                                $ @Html.DisplayFor(modelItem => item.Precio)<small>.00</small>
                             </div>
                         </div>
                         <!-- Product actions-->
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a href="@Url.Action("Buy", "Cart", new { id = item.ProductoID })">Agregar al carrito</a></div>
+                            <div class="text-center"><a href="@Url.Action("Buy", "Cart", new { id = item.ProductoID })">Agregar 1Kg al carrito</a></div>
                         </div>
                     </div>
                 </div>

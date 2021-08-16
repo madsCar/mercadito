@@ -29,7 +29,7 @@
             @foreach (Item item in (List<Item>)Session["cart"])
             {
                 <tr>
-                    <td><a href="@Url.Action("Remove", "Cart", new { id = item.Producto.ProductoID })">Remove</a></td>
+                    <td><a href="@Url.Action("Remove", "Cart", new { id = item.Producto.ProductoID })">Eliminar producto</a></td>
                     <td>@item.Producto.ProductoID</td>
                     <td>@item.Producto.nombre</td>
                     <td><img src="~/img/@item.Producto.Imagen" width="60" /> </td>

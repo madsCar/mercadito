@@ -10,6 +10,7 @@ using MercaditoRecargado.Models;
 
 namespace MercaditoRecargado.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CategoriasProductoesController : Controller
     {
         private ClientesModelContext db = new ClientesModelContext();

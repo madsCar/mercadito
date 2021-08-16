@@ -141,6 +141,18 @@ namespace IdentitySample.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            if (Request.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Productoes");
+
+
+            }
+            if (Request.IsAuthenticated && User.IsInRole("Empleado"))
+            {
+                return RedirectToAction("Index", "Productoes");
+
+
+            }
             return View();
         }
 

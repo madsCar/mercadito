@@ -13,7 +13,7 @@
 
     <div class="form-horizontal">
         <div>
-            <h2>Detalle del pedido: @Html.DisplayFor(model => model.VentaID) </h2>
+            <h2>Detalle del pedido: @Html.DisplayFor(model => model.VentaID) | Estado: @Html.DisplayFor(model => model.Estatus)</h2>
             <hr />
             <table class="table">
 
@@ -141,7 +141,7 @@
             </div>
 
 
-
+            <br>
 
             <h2>Productos</h2>
 
@@ -178,7 +178,7 @@
                         </td>
 
                         <td>
-                            @Html.DisplayFor(modelItem => item.Cantidad)
+                            @Html.DisplayFor(modelItem => item.Cantidad) Kg
                         </td>
 
                         <td>
@@ -200,7 +200,7 @@
 }
 <p>
 
-    @Html.ActionLink("Regresar", "Index")
+    @Html.ActionLink("Regresar", "PedidosEmpleado")
 </p>
 
 @section Scripts {

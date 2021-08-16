@@ -11,7 +11,7 @@ using Microsoft.AspNet.Identity;
 
 namespace MercaditoRecargado.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin, Empleado, Cliente")]
     public class VentaDetallesController : Controller
     {
         private ClientesModelContext db = new ClientesModelContext();
@@ -25,22 +25,25 @@ namespace MercaditoRecargado.Controllers
 
 
             }
-            var venta = db.Venta.Include(v => v.Cliente.Persona);
-            
+            var venta = db.Venta.Where(e => e.Estatus != "Finalizado").ToList();
+
             return View(venta.ToList());
         }
 
         public ActionResult PedidosEmpleado()
         {
+
             if (Request.IsAuthenticated && User.IsInRole("Cliente"))
             {
                 return RedirectToAction("Index", "Home");
 
 
             }
+        
           
             var user = User.Identity.GetUserId();
-            var empleado = db.Empleado.SqlQuery("select * from Empleadoes where Empleadoes.EmlpleadoUser = '" + user + "'").ToList();
+            var empleado = db.Empleado.Where(e => e.EmpleadoUser == user).ToList();
+           
             Empleado _empleado = new Empleado(); 
             
      
@@ -50,26 +53,24 @@ namespace MercaditoRecargado.Controllers
 
             }
 
-            var _venta = db.Venta.Include(v => v.Cliente.Persona);
-            List<Venta> listVenta;
            
-            listVenta = new List<Venta>();
-            foreach (var item in _venta)
-            {
-                if(item.EmpleadoID == _empleado.EmpleadoID)
-                {
-                    listVenta.Add(item);
-                }
-               
+            var _venta = db.Venta.Where(e => e.EmpleadoID == _empleado.EmpleadoID).Where(e => e.Estatus !="Finalizado").ToList();
+        
+           
+         
 
-            }
-
-            return View(listVenta.ToList());
+            return View(_venta);
         }
 
         // GET: VentaDetalles/Details/5
         public ActionResult Details(int? id)
         {
+            if (Request.IsAuthenticated && User.IsInRole("Cliente"))
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -108,9 +109,15 @@ namespace MercaditoRecargado.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-
+        //Datails Post
         public ActionResult Details(Venta venta)
         {
+            if (Request.IsAuthenticated && User.IsInRole("Cliente"))
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
             if (ModelState.IsValid)
             {
                 venta.Estatus = "En proceso";
@@ -125,6 +132,18 @@ namespace MercaditoRecargado.Controllers
             // GET: VentaDetalles/Create
             public ActionResult Create()
         {
+            if (Request.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Productoes");
+
+
+            }
+            if (Request.IsAuthenticated && User.IsInRole("Empleado"))
+            {
+                return RedirectToAction("Index", "Productoes");
+
+
+            }
             if (Session["cart"] == null)
             {
                 return RedirectToAction("ProductoCliente", "Productoes");
@@ -134,9 +153,9 @@ namespace MercaditoRecargado.Controllers
 
 
             Venta venta = new Venta();
-            var user = User.Identity.GetUserId();
-            var clientesID = db.Cliente.SqlQuery("select * from Clientes where Clientes.ClienteUser = '" + user + "'").ToList();
             Cliente client = new Cliente();
+            var user = User.Identity.GetUserId();
+            var clientesID = db.Cliente.Where(c => c.ClienteUser == user).ToList();
             List<SelectListItem> dir;
             List<SelectListItem> tar;
             dir = new List<SelectListItem>();
@@ -147,14 +166,13 @@ namespace MercaditoRecargado.Controllers
                
             }
             client = db.Cliente.Find(client.ClienteID);
-            client.Persona = db.Personas.Find(client.PersonaID);
-            var direccion = db.DireccionCliente.ToList();
-            var tarjeta = db.DatosTarjeta.ToList();
+           // client.Persona = db.Personas.Find(client.PersonaID);
+            var direccion = db.DireccionCliente.Where(c => c.PersonaID == client.PersonaID).ToList();
+            var tarjeta = db.DatosTarjeta.Where(c => c.ClienteID == client.ClienteID).ToList();
             foreach (DatosTarjeta x in tarjeta)
             {
 
-                if (x.ClienteID == client.ClienteID)
-                {
+               
 
                     client.DatosTarjetas.Add(x);
                     tar.Add(new SelectListItem
@@ -162,19 +180,18 @@ namespace MercaditoRecargado.Controllers
                         Text = "**** **** **** "+x.Last4.ToString(),
                         Value = x.DatosTarjetaID.ToString()
                     });
-                }
+                
             } 
             foreach (DireccionCliente x in direccion)
             {
-                if (x.PersonaID == client.PersonaID)
-                {
+                
                     client.Persona.DireccionClientes.Add(x);
                     dir.Add(new SelectListItem
                     {
                         Text = x.Calle+","+x.NumeroExterior+","+x.Colonia,
                         Value = x.DireccionClienteID.ToString()
                     });
-                }
+                
             }
             List<SelectListItem> listHorarios;
             listHorarios = new List<SelectListItem>();
@@ -195,6 +212,18 @@ namespace MercaditoRecargado.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Venta venta)
         {
+            if (Request.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Productoes");
+
+
+            }
+            if (Request.IsAuthenticated && User.IsInRole("Empleado"))
+            {
+                return RedirectToAction("Index", "Productoes");
+
+
+            }
             if (venta.DireccionClienteID==0)
             {
                 return RedirectToAction("Create", "VentaDetalles");
@@ -238,7 +267,7 @@ namespace MercaditoRecargado.Controllers
                 
             }
             Session["cart"] = null;
-            return RedirectToAction("ProductoCliente", "Productoes");
+            return RedirectToAction("GraciasPorsuCompra", "Ventas");
            // }
 
            // ViewBag.ProductoID = new SelectList(db.Producto, "ProductoID", "nombre", ventaDetalle.ProductoID);
@@ -248,39 +277,69 @@ namespace MercaditoRecargado.Controllers
         // GET: VentaDetalles/Edit/5
         public ActionResult Edit(int? id)
         {
+            if (Request.IsAuthenticated && User.IsInRole("Cliente"))
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VentaDetalle ventaDetalle = db.VentaDetalle.Find(id);
-            if (ventaDetalle == null)
+            Venta venta = db.Venta.Find(id);
+            VentaDetalle ventaDetalle = new VentaDetalle();
+            var vDetalle = db.VentaDetalle.ToList();
+            foreach (VentaDetalle x in vDetalle)
+            {
+                if (x.VentaID == id)
+                {
+                    venta.VentaDetalles.Add(x);
+                }
+            }
+           
+
+            if (venta == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ProductoID = new SelectList(db.Producto, "ProductoID", "nombre", ventaDetalle.ProductoID);
-            return View(ventaDetalle);
+            return View(venta);
         }
+
 
         // POST: VentaDetalles/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "VentaDetalleID,FolioVenta,Precio,cantidad,ProductoID")] VentaDetalle ventaDetalle)
+        public ActionResult Edit(Venta venta)
         {
+            if (Request.IsAuthenticated && User.IsInRole("Cliente"))
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
             if (ModelState.IsValid)
             {
-                db.Entry(ventaDetalle).State = EntityState.Modified;
+                venta.Estatus = "Finalizado";
+                db.Entry(venta).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("PedidosEmpleado");
             }
-            ViewBag.ProductoID = new SelectList(db.Producto, "ProductoID", "nombre", ventaDetalle.ProductoID);
-            return View(ventaDetalle);
+
+            return View();
         }
 
         // GET: VentaDetalles/Delete/5
         public ActionResult Delete(int? id)
         {
+            if (Request.IsAuthenticated && User.IsInRole("Cliente"))
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

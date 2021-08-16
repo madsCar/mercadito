@@ -14,6 +14,8 @@ using Microsoft.AspNet.Identity.Owin;
 
 namespace MercaditoRecargado.Controllers
 {
+
+    [Authorize(Roles = "Admin")]
     public class ClientesController : Controller
     {
         private ClientesModelContext db = new ClientesModelContext();
