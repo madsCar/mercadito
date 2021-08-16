@@ -44,7 +44,7 @@ namespace MercaditoRecargado.Controllers
             }
 
 
-            var _venta = db.Venta.Where(e => e.clienteID == _cliente.ClienteID).ToList();
+            var _venta = db.Venta.Where(e => e.clienteID == _cliente.ClienteID).OrderByDescending(e => e.HoraEntrega).OrderByDescending(e => e.FechaEntrega).ToList();
 
 
 

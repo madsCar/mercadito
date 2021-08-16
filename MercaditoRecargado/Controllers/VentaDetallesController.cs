@@ -25,7 +25,7 @@ namespace MercaditoRecargado.Controllers
 
 
             }
-            var venta = db.Venta.Where(e => e.Estatus != "Finalizado").ToList();
+            var venta = db.Venta.Where(e => e.Estatus != "Finalizado").OrderByDescending(e => e.HoraEntrega).OrderByDescending(e => e.FechaEntrega).ToList();
 
             return View(venta.ToList());
         }
@@ -54,7 +54,7 @@ namespace MercaditoRecargado.Controllers
             }
 
            
-            var _venta = db.Venta.Where(e => e.EmpleadoID == _empleado.EmpleadoID).Where(e => e.Estatus !="Finalizado").ToList();
+            var _venta = db.Venta.Where(e => e.EmpleadoID == _empleado.EmpleadoID).Where(e => e.Estatus !="Finalizado").OrderByDescending(e => e.FechaEntrega).ToList();
         
            
          
