@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MercaditoRecargado.Models;
+using Microsoft.AspNet.Identity;
 
 namespace MercaditoRecargado.Controllers
 {
@@ -18,6 +19,29 @@ namespace MercaditoRecargado.Controllers
         public ActionResult Index()
         {
             return View(db.DireccionCliente.ToList());
+        }
+        public ActionResult IndexCliente()
+        {
+            var user = User.Identity.GetUserId();
+            var personaID = db.Personas.SqlQuery("select * from Personas p join Clientes c on p.PersonaID = c.PersonaID where c.ClienteUser = '" + user + "'").ToList();
+            Persona client = new Persona();
+            List<SelectListItem> dir;
+            dir = new List<SelectListItem>();
+            foreach (var item in personaID)
+            {
+                client = item;
+            }
+            client = db.Personas.Find(client.PersonaID);
+            var direccion = db.DireccionCliente.ToList();
+            foreach (DireccionCliente x in direccion)
+            {
+                if (x.PersonaDireccion == client.PersonaID)
+                {
+                    client.DireccionClientes.Add(x);
+                    
+                }
+            }
+            return View(client.DireccionClientes.ToList().AsEnumerable());
         }
 
         // GET: DireccionClientes/Details/5

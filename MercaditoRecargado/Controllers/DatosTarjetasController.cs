@@ -4,9 +4,11 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using MercaditoRecargado.Models;
+using Microsoft.AspNet.Identity;
 
 namespace MercaditoRecargado.Controllers
 {
@@ -15,9 +17,42 @@ namespace MercaditoRecargado.Controllers
         private ClientesModelContext db = new ClientesModelContext();
 
         // GET: DatosTarjetas
-        public ActionResult Index()
+        public async Task<ActionResult> IndexCliente()
         {
-            return View(db.DatosTarjeta.ToList());
+            var user = User.Identity.GetUserId();
+            var ddb = new ClientesModelContext();
+            //var cliente = ddb.Cliente.SqlQuery("select * from Clientes cl join  c  on c.ClienteID=dt.ClienteTarjeta where c.ClienteUser= ' " + user +"'");
+            var clientesID = db.Cliente.SqlQuery("select * from Clientes where Clientes.ClienteUser = '" + user + "'").ToList();
+            Cliente client = new Cliente();
+            List<SelectListItem> tar;
+            tar = new List<SelectListItem>();
+            foreach (var item in clientesID)
+            {
+                client = item;
+            }
+            client = db.Cliente.Find(client.ClienteID);
+            var tarjeta = db.DatosTarjeta.ToList();
+            foreach (DatosTarjeta x in tarjeta)
+            {
+                if (x.ClienteID == client.ClienteID)
+                {
+                    client.DatosTarjetas.Add(x);
+                    tar.Add(new SelectListItem
+                    {
+                        Text = "**** **** **** " + x.Last4.ToString(),
+                        Value = x.DatosTarjetaID.ToString()
+                    });
+                }
+            }
+            //client.DatosTarjetas.tolistAs
+
+            //db.DatosTarjeta = cliente;
+            //var tarjetas = db.DatosTarjeta.Include(d => d.);
+            //DatosTarjeta tarjeta =  db.DatosTarjeta.FindAsync(cliente);
+
+            //var datos = db.DatosTarjeta.GroupJoin(db.DatosTarjeta, dt => dt.ClienteID, cl => cl.ClienteID, (dt, cl) => new { dt, cl }).Where(x => x.cl.ClienteUser == user);
+
+            return View(client.DatosTarjetas.ToList().AsEnumerable());
         }
 
         // GET: DatosTarjetas/Details/5

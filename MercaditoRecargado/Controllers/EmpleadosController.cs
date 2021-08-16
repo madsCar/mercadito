@@ -109,7 +109,7 @@ namespace MercaditoRecargado.Controllers
                 empleado = model.Empleado;
                 empleado.Persona = model.Empleado.Persona;
                 empleado.fechaIngreso = DateTime.Now;
-                empleado.Estatus = "Activo";
+                //empleado.Estatus = "Activo";
 
                 empleado.EmlpleadoUser = user.Id;
                 db.Personas.Add(empleado.Persona);

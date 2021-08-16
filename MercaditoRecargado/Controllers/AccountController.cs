@@ -6,12 +6,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System;
+using MercaditoRecargado.Models;
 
 namespace IdentitySample.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
+        private ClientesModelContext db = new ClientesModelContext();
         public AccountController()
         {
         }
@@ -41,8 +44,10 @@ namespace IdentitySample.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
-            ViewBag.ReturnUrl = returnUrl;
-            return View();
+            
+                ViewBag.ReturnUrl = returnUrl;
+                return View();
+            
         }
 
         private ApplicationSignInManager _signInManager;
@@ -71,10 +76,26 @@ namespace IdentitySample.Controllers
             // This doen't count login failures towards lockout only two factor authentication
             // To enable password failures to trigger lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            //var db = new ClientesModelContext();
+
+            string rol = db.Database.SqlQuery<string>("Select rol.Name from AspNetUsers us join AspNetUserRoles usrol on us.Id=usrol.UserId join AspNetRoles rol on usrol.RoleId=rol.Id where us.Email = '" + model.Email + "'").FirstOrDefault();
+
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+
+                    if (rol == "Admin" || rol == "Empleado")
+                    {
+                        return RedirectToAction("Index", "Admins");
+                    }
+                    else
+                    {
+                        return RedirectToLocal(returnUrl);
+                        
+                    }
+                    
+                    
+                        
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -151,8 +172,19 @@ namespace IdentitySample.Controllers
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                var result2 = await UserManager.AddToRolesAsync(user.Id, "Cliente");
+                if (result.Succeeded && result2.Succeeded)
                 {
+                    Cliente cliente = new Cliente();
+                    cliente = model.Clientes;
+                    cliente.Persona = model.Clientes.Persona;
+                    cliente.fechaRegistro = DateTime.Now;
+                    cliente.Estatus = 1;
+
+                    cliente.ClienteUser = user.Id;
+                    db.Personas.Add(cliente.Persona);
+                    db.Cliente.Add(cliente);
+                    db.SaveChanges();
                     var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
