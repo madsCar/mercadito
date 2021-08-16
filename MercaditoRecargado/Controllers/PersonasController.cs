@@ -10,6 +10,7 @@ using MercaditoRecargado.Models;
 
 namespace MercaditoRecargado.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class PersonasController : Controller
     {
         private ClientesModelContext db = new ClientesModelContext();
@@ -46,10 +47,11 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "PersonaID,Nombre,ApPaterno,ApMaterno,FechaNac,Genero,CP,CURP,RFC")] Persona persona)
+        public ActionResult Create([Bind(Include = "PersonaID,Nombre,ApPaterno,ApMaterno,FechaNac,Domicilio,Telefono,Genero,Estado,Ciudad,CP,CURP,RFC")] Persona persona)
         {
             if (ModelState.IsValid)
             {
+
                 db.Personas.Add(persona);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -78,7 +80,7 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "PersonaID,Nombre,ApPaterno,ApMaterno,FechaNac,Genero,CP,CURP,RFC")] Persona persona)
+        public ActionResult Edit([Bind(Include = "PersonaID,Nombre,ApPaterno,ApMaterno,FechaNac,Domicilio,Telefono,Genero,Estado,Ciudad,CP,CURP,RFC")] Persona persona)
         {
             if (ModelState.IsValid)
             {

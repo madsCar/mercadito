@@ -6,23 +6,73 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using MercaditoRecargado.Models;
+using Microsoft.AspNet.Identity;
 
 namespace MercaditoRecargado.Controllers
 {
+    
+
     public class ProductoesController : Controller
     {
+       
         private ClientesModelContext db = new ClientesModelContext();
 
         // GET: Productoes
         public ActionResult Index()
         {
-            return View(db.Producto.ToList());
+            if (!Request.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
+
+            if (Request.IsAuthenticated && User.IsInRole("Cliente"))
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
+            var producto = db.Producto.Include(c => c.CategoriasProducto);
+            return View(producto.ToList());
+        }
+
+        public ActionResult ProductoCliente()
+        {
+
+            if (Request.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Productoes");
+
+
+            }
+            if (Request.IsAuthenticated && User.IsInRole("Empleado"))
+            {
+                return RedirectToAction("Index", "Productoes");
+
+
+            }
+            var producto = db.Producto.Include(c => c.CategoriasProducto);
+            return View(producto.ToList());
         }
 
         // GET: Productoes/Details/5
         public ActionResult Details(int? id)
         {
+            if (!Request.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
+            if (Request.IsAuthenticated && User.IsInRole("Cliente"))
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -38,6 +88,31 @@ namespace MercaditoRecargado.Controllers
         // GET: Productoes/Create
         public ActionResult Create()
         {
+            if (!Request.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
+            if (Request.IsAuthenticated && User.IsInRole("Cliente"))
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
+            List<SelectListItem> listCategorias;
+        // CARGAMOS EL DropDownList DE REGIONES
+        var categoria = db.CategoriasProducto.ToList();
+            listCategorias = new List<SelectListItem>();
+            foreach (var item in categoria)
+            {
+                listCategorias.Add(new SelectListItem
+                {
+                    Text = item.Descripcion,
+                    Value = item.CategoriasProductoID.ToString()
+                });
+            }
+            ViewBag.CategoriasProductoID = listCategorias;
             return View();
         }
 
@@ -46,10 +121,24 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProductoID,nombre,CategoriaID,Estatus,Precio")] Producto producto)
+        public ActionResult Create([Bind(Include = "ProductoID,nombre,CategoriasProductoID,Precio,Imagen")] Producto producto)
         {
+            if (!Request.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
+            if (Request.IsAuthenticated && User.IsInRole("Cliente"))
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
             if (ModelState.IsValid)
             {
+                producto.Precio = producto.Precio * 1.4;
+                producto.Estatus = 1;
                 db.Producto.Add(producto);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -61,15 +150,40 @@ namespace MercaditoRecargado.Controllers
         // GET: Productoes/Edit/5
         public ActionResult Edit(int? id)
         {
+            if (!Request.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
+            if (Request.IsAuthenticated && User.IsInRole("Cliente"))
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
+            List<SelectListItem> listCategorias;
+            var categoria = db.CategoriasProducto.ToList();
+            listCategorias = new List<SelectListItem>();
+            foreach (var item in categoria)
+            {
+                listCategorias.Add(new SelectListItem
+                {
+                    Text = item.Descripcion,
+                    Value = item.CategoriasProductoID.ToString()
+                });
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            
             Producto producto = db.Producto.Find(id);
             if (producto == null)
             {
                 return HttpNotFound();
             }
+            ViewBag.CategoriasProductoID = listCategorias;
             return View(producto);
         }
 
@@ -78,10 +192,23 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ProductoID,nombre,CategoriaID,Estatus,Precio")] Producto producto)
+        public ActionResult Edit([Bind(Include = "ProductoID,nombre,CategoriasProductoID,Estatus,Precio,Imagen")] Producto producto)
         {
+            if (!Request.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
+            if (Request.IsAuthenticated && User.IsInRole("Cliente"))
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
             if (ModelState.IsValid)
             {
+                producto.Precio = producto.Precio * 1.4;
                 db.Entry(producto).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -92,6 +219,18 @@ namespace MercaditoRecargado.Controllers
         // GET: Productoes/Delete/5
         public ActionResult Delete(int? id)
         {
+            if (!Request.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
+            if (Request.IsAuthenticated && User.IsInRole("Cliente"))
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -109,6 +248,18 @@ namespace MercaditoRecargado.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!Request.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
+            if (Request.IsAuthenticated && User.IsInRole("Cliente"))
+            {
+                return RedirectToAction("Index", "Home");
+
+
+            }
             Producto producto = db.Producto.Find(id);
             db.Producto.Remove(producto);
             db.SaveChanges();
@@ -117,6 +268,7 @@ namespace MercaditoRecargado.Controllers
 
         protected override void Dispose(bool disposing)
         {
+
             if (disposing)
             {
                 db.Dispose();

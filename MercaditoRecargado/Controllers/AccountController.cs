@@ -1,7 +1,9 @@
 ﻿using IdentitySample.Models;
+using MercaditoRecargado.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -12,6 +14,8 @@ namespace IdentitySample.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+
+        private ClientesModelContext db = new ClientesModelContext();
         public AccountController()
         {
         }
@@ -137,6 +141,18 @@ namespace IdentitySample.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            if (Request.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Productoes");
+
+
+            }
+            if (Request.IsAuthenticated && User.IsInRole("Empleado"))
+            {
+                return RedirectToAction("Index", "Productoes");
+
+
+            }
             return View();
         }
 
@@ -151,8 +167,24 @@ namespace IdentitySample.Controllers
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
+                
                 if (result.Succeeded)
                 {
+                    var result2 = await UserManager.AddToRolesAsync(user.Id, "Cliente");
+                    Cliente cliente;
+                    cliente = model.Clientes;
+                    cliente.Persona = model.Clientes.Persona;
+                    cliente.fechaRegistro = DateTime.Now;
+                    cliente.Estatus = 1;
+                    cliente.Persona.Ciudad = "XXX";
+                    cliente.Persona.CP = "XXX";
+                    cliente.Persona.Estado = "XXX";
+                    cliente.Persona.Domicilio = "XXX";
+
+                    cliente.ClienteUser = user.Id;
+                    db.Personas.Add(cliente.Persona);
+                    db.Cliente.Add(cliente);
+                    db.SaveChanges();
                     var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");

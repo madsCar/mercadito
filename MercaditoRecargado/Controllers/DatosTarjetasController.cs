@@ -10,6 +10,7 @@ using MercaditoRecargado.Models;
 
 namespace MercaditoRecargado.Controllers
 {
+    [Authorize(Roles = "Cliente")]
     public class DatosTarjetasController : Controller
     {
         private ClientesModelContext db = new ClientesModelContext();
@@ -46,7 +47,7 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "DatosTarjetaID,Last4,NumeroTarjeta,FechaVencimiento,CVV,ClienteTarjeta")] DatosTarjeta datosTarjeta)
+        public ActionResult Create([Bind(Include = "DatosTarjetaID,Last4,NumeroTarjeta,FechaVencimiento,CVV,ClienteID")] DatosTarjeta datosTarjeta)
         {
             if (ModelState.IsValid)
             {

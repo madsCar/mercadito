@@ -1,51 +1,82 @@
 ﻿@model IEnumerable<MercaditoRecargado.Models.Cliente>
 
-@{
-    ViewBag.Title = "Index";
-}
+@{ ViewBag.Title = "Index"; }
 
-<h2>Index</h2>
+<h2>Clientes</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Agregar nuevo cliente", "Create")
 </p>
 <table class="table">
     <tr>
         <th>
+            @Html.DisplayNameFor(model => model.Persona.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Persona.ApPaterno)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Persona.ApMaterno)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Persona.FechaNac)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Persona.Genero)
+        </th>
+       
+        <th>
+            @Html.DisplayNameFor(model => model.Persona.Telefono)
+        </th>
+
+  
+        <th>
             @Html.DisplayNameFor(model => model.fechaRegistro)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Estatus)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ClienteDatos)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ClienteUser)
-        </th>
+
+
+
+
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.fechaRegistro)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Estatus)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ClienteDatos)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ClienteUser)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ClienteID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ClienteID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ClienteID })
-        </td>
-    </tr>
+    @foreach (var item in Model)
+    {
+<tr>
+
+    <td>
+        @Html.DisplayFor(modelItem => item.Persona.Nombre)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Persona.ApPaterno)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Persona.ApMaterno)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Persona.FechaNac)
+    </td>
+
+    <td>
+
+        @Html.DisplayFor(modelItem => item.Persona.Genero)
+
+    </td>
+
+    <td>
+        @Html.DisplayFor(modelItem => item.Persona.Telefono)
+    </td>
+
+    <td>
+        @Html.DisplayFor(modelItem => item.fechaRegistro)
+    </td>
+
+    <td>
+        @Html.ActionLink("Editar", "Edit", new { id = item.ClienteID }) |
+        @Html.ActionLink("Detalles", "Details", new { id = item.ClienteID }) |
+        @Html.ActionLink("Eliminar", "Delete", new { id = item.ClienteID })
+    </td>
+</tr>
 }
 
 </table>

@@ -4,12 +4,15 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using MercaditoRecargado.Models;
 
 namespace MercaditoRecargado.Controllers
 {
+    [Authorize(Roles = "Cliente")]
     public class DireccionClientesController : Controller
     {
         private ClientesModelContext db = new ClientesModelContext();
@@ -17,6 +20,7 @@ namespace MercaditoRecargado.Controllers
         // GET: DireccionClientes
         public ActionResult Index()
         {
+            //var user = Membership.GetUser().ProviderUserKey;
             return View(db.DireccionCliente.ToList());
         }
 
@@ -46,7 +50,7 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "DireccionClienteID,Calle,NumeroExterior,NumeroInterior,Referencia,Colonia,Municipio,Estado,CodigoPostal,PersonaDireccion")] DireccionCliente direccionCliente)
+        public ActionResult Create([Bind(Include = "DireccionClienteID,Calle,NumeroExterior,NumeroInterior,Referencia,Colonia,Municipio,Estado,CodigoPostal,PersonaID")] DireccionCliente direccionCliente)
         {
             if (ModelState.IsValid)
             {
@@ -78,7 +82,7 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "DireccionClienteID,Calle,NumeroExterior,NumeroInterior,Referencia,Colonia,Municipio,Estado,CodigoPostal,PersonaDireccion")] DireccionCliente direccionCliente)
+        public ActionResult Edit([Bind(Include = "DireccionClienteID,Calle,NumeroExterior,NumeroInterior,Referencia,Colonia,Municipio,Estado,CodigoPostal,PersonaID")] DireccionCliente direccionCliente)
         {
             if (ModelState.IsValid)
             {
@@ -114,6 +118,8 @@ namespace MercaditoRecargado.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+      
 
         protected override void Dispose(bool disposing)
         {
