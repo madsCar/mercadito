@@ -1,0 +1,98 @@
+﻿@model IEnumerable<MercaditoRecargado.Models.DireccionCliente>
+
+<p>
+    @Html.ActionLink("Agregar Nueva Dirección", "Create")
+</p>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Mis Direcciones</h6>
+        
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Calle)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.NumeroExterior)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.NumeroInterior)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Referencia)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Colonia)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Municipio)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Estado)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CodigoPostal)
+                        </th>
+
+                        <th></th>
+                    </tr>
+                </thead>
+
+                @foreach (var item in Model)
+                {
+                    <tbody>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Calle)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumeroExterior)
+                            </td>
+                            <td>
+                                @{
+                                    int num = item.NumeroInterior;
+                                    if (num == 0)
+                                    {
+                                        Html.Display("--");
+                                    }
+                                    else
+                                    {
+                                        @Html.DisplayFor(modelItem => item.NumeroInterior)
+                                    }
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Referencia)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Colonia)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Municipio)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Estado)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CodigoPostal)
+                            </td>
+
+                            <td>
+                                <a href="@Url.Action("Edit", new { id = item.DireccionClienteID })"><i class="bi bi-pencil"></i></a> |
+                                <a href="@Url.Action("Details", new { id = item.DireccionClienteID })"><i class="bi bi-info-circle-fill"></i></a> |
+                                <a href="@Url.Action("Delete", new { id = item.DireccionClienteID })"><i class="bi bi-trash-fill"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+

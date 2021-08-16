@@ -1,0 +1,62 @@
+﻿@model IEnumerable<MercaditoRecargado.Models.DatosTarjeta>
+
+@{
+    ViewBag.Title = "Mis Tarjetas";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Agregar Nueva Tarjeta", "Create")
+</p>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Mis Tarjetas</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.NumeroTarjeta)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FechaVencimiento)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CVV)
+                        </th>
+
+                        <th></th>
+                    </tr>
+                </thead>
+
+                @foreach (var item in Model)
+                {
+                    <tbody>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NumeroTarjeta)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FechaVencimiento)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CVV)
+                            </td>
+
+                            <td>
+                                <a href="@Url.Action("Edit", new { id = item.DatosTarjetaID }))"><i class="bi bi-pencil"></i></a> |
+                                <a href="@Url.Action("Details", new { id = item.DatosTarjetaID }))"><i class="bi bi-info-circle-fill"></i></a> |
+                                <a href="@Url.Action("Delete", new { id = item.DatosTarjetaID }))"><i class="bi bi-trash-fill"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>

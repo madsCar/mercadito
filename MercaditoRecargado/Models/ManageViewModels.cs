@@ -2,6 +2,7 @@
 using Microsoft.Owin.Security;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using MercaditoRecargado.Models;
 
 namespace IdentitySample.Models
 {
@@ -58,6 +59,10 @@ namespace IdentitySample.Models
         public string ConfirmPassword { get; set; }
     }
 
+    public class AddCreditCard
+    {
+        public DatosTarjeta tarjeta { get; set; }
+    }
 
     public class AddPhoneNumberViewModel
     {

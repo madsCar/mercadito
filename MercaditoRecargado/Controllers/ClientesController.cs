@@ -7,6 +7,10 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MercaditoRecargado.Models;
+using System.Data.Entity.Validation;
+using IdentitySample.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace MercaditoRecargado.Controllers
 {
@@ -14,10 +18,47 @@ namespace MercaditoRecargado.Controllers
     {
         private ClientesModelContext db = new ClientesModelContext();
 
+        public ClientesController()
+        {
+        }
+
+        public ClientesController(ApplicationUserManager userManager, ApplicationRoleManager roleManager)
+        {
+            UserManager = userManager;
+            RoleManager = roleManager;
+        }
+
+        private ApplicationUserManager _userManager;
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
+
+        private ApplicationRoleManager _roleManager;
+        public ApplicationRoleManager RoleManager
+        {
+            get
+            {
+                return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>();
+            }
+            private set
+            {
+                _roleManager = value;
+            }
+        }
+
         // GET: Clientes
         public ActionResult Index()
         {
-            return View(db.Cliente.ToList());
+            var clientes = db.Cliente.Include(c => c.Persona);
+            return View(clientes.ToList());
         }
 
         // GET: Clientes/Details/5
@@ -38,6 +79,7 @@ namespace MercaditoRecargado.Controllers
         // GET: Clientes/Create
         public ActionResult Create()
         {
+            ViewBag.ClienteDatos = new SelectList(db.Personas, "PersonaID", "Nombre");
             return View();
         }
 
@@ -46,31 +88,72 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ClienteID,fechaRegistro,Estatus,ClienteDatos,ClienteUser")] Cliente cliente)
+        public ActionResult Create(Cliente cliente)
         {
             if (ModelState.IsValid)
             {
                 db.Cliente.Add(cliente);
                 db.SaveChanges();
                 return RedirectToAction("Index");
+
+                // if (Request.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Empleado"))
+                // {
+                //      cliente.ClienteUser = null;
+                //  }
+                try
+                {
+                    cliente.fechaRegistro = DateTime.Now;
+                    cliente.Estatus = 1;
+                    var datos = TempData["data"] as string;
+                    cliente.ClienteUser = datos;
+                    db.Personas.Add(cliente.Persona);
+                    db.Cliente.Add(cliente);
+                    db.SaveChanges();
+                }
+                catch (DbEntityValidationException e)
+                {
+
+                    Console.WriteLine(e);
+                }
+
+                if (Request.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Empleado"))
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+
+                    return Redirect("~/Account/Login");
+                }
+
+
+
+
             }
 
+            ViewBag.ClienteDatos = new SelectList(db.Personas, "PersonaID", "Nombre", cliente.PersonaID);
+            
             return View(cliente);
         }
 
         // GET: Clientes/Edit/5
-        public ActionResult Edit(int? id)
+        public async System.Threading.Tasks.Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Cliente cliente = db.Cliente.Find(id);
+            var user = await UserManager.FindByIdAsync(cliente.ClienteUser);
+            ClienteUsuario ClienteU = new ClienteUsuario();
+            ClienteU.Cliente = cliente as Cliente;
+            ClienteU.Usuario = user;
             if (cliente == null)
             {
                 return HttpNotFound();
             }
-            return View(cliente);
+            ViewBag.ClienteDatos = new SelectList(db.Personas, "PersonaID", "Nombre", cliente.PersonaID);
+            return View(ClienteU);
         }
 
         // POST: Clientes/Edit/5
@@ -78,15 +161,41 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ClienteID,fechaRegistro,Estatus,ClienteDatos,ClienteUser")] Cliente cliente)
+        public async System.Threading.Tasks.Task<ActionResult> Edit(ClienteUsuario clienteU, params string[] selectedRole)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(cliente).State = EntityState.Modified;
+                var user = await UserManager.FindByIdAsync(clienteU.Cliente.ClienteUser);
+                user.UserName = clienteU.Usuario.Email;
+                user.Email = clienteU.Usuario.Email;
+
+
+                var userRoles = await UserManager.GetRolesAsync(user.Id);
+
+                selectedRole = selectedRole ?? new string[] { "Cliente" };
+
+                var result = await UserManager.AddToRolesAsync(user.Id, selectedRole.Except(userRoles).ToArray<string>());
+
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("", result.Errors.First());
+                    return View();
+                }
+                result = await UserManager.RemoveFromRolesAsync(user.Id, userRoles.Except(selectedRole).ToArray<string>());
+
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("", result.Errors.First());
+                    return View();
+                }
+                db.Entry(clienteU.Cliente.Persona).State = EntityState.Modified;
+
+                // db.Entry(clienteU.Cliente).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(cliente);
+            // ViewBag.ClienteDatos = new SelectList(db.Personas, "PersonaID", "Nombre", cliente.Persona);
+            return View(clienteU.Cliente);
         }
 
         // GET: Clientes/Delete/5
@@ -107,10 +216,19 @@ namespace MercaditoRecargado.Controllers
         // POST: Clientes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async System.Threading.Tasks.Task<ActionResult> DeleteConfirmedAsync(int id)
         {
             Cliente cliente = db.Cliente.Find(id);
+            Persona persona = db.Personas.Find(cliente.PersonaID);
+
+            var user = await UserManager.FindByIdAsync(cliente.ClienteUser);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            var result = await UserManager.DeleteAsync(user);
             db.Cliente.Remove(cliente);
+            db.Personas.Remove(persona);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
