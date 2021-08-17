@@ -58,6 +58,7 @@ namespace MercaditoRecargado.Controllers
             return View(producto.ToList());
         }
 
+
         // GET: Productoes/Details/5
         public ActionResult Details(int? id)
         {

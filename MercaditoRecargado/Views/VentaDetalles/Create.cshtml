@@ -8,95 +8,159 @@
 
 
 
+<div class="container py-5 h-100">
+    <div class="row justify-content-center align-items-center h-100">
+        <div class="col-12 col-lg-9 col-xl-7">
+            <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+                <div class="card-body p-4 p-md-5">
+                    <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Verifica tu compra</h3>
+                    <section>
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+                            <div class="row">
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-primary">Mi carrito</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Option</th>
+                                                        <th>Id</th>
+                                                        <th>Nombre</th>
+                                                        <th>Imagen</th>
+                                                        <th>Precio</th>
+                                                        <th>Cantidad</th>
+                                                        <th>Sub Total</th>
+                                                    </tr>
+                                                </thead>
+                                                @foreach (Item item in (List<Item>)Session["cart"])
+                                                {
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><a href="@Url.Action("Remove", "Cart", new { id = item.Producto.ProductoID })">Eliminar producto</a></td>
+                                                            <td>@item.Producto.ProductoID</td>
+                                                            <td>@item.Producto.nombre</td>
+                                                            <td><img src="~/img/@item.Producto.Imagen" width="60" /> </td>
+                                                            <td>$@item.Producto.Precio<small></small></td>
+                                                            <td>@item.Quantity Kg</td>
+                                                            <td>$@(item.Producto.Precio * item.Quantity)<small></small></td>
+                                                        </tr>
+                                                    </tbody>
+                                                }
+                                                <tfoot>
+                                                    <tr>
+                                                        <td align="right" colspan="6">Total</td>
+                                                        <td>
+                                                            @{
+                                                                List<Item> cart = (List<Item>)Session["cart"];
+                                                                var total = cart.Sum(item => item.Producto.Precio * item.Quantity);
+                                                            }
+                                                            $@total<small></small>
+                                                        </td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        @Html.DropDownList("DireccionClienteID", null, htmlAttributes: new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.DireccionClienteID, "", new { @class = "text-danger" })
+                                        <label for="form-label" class="form-label">Mis Direcciones</label> |  @Html.ActionLink("Agregar Dirección", "Create", "DireccionClientes")
+                                    </div>
 
-    <div class="form-horizontal">
-        <h4>Carrito de compras</h4>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        @Html.DropDownList("DatosTarjetaID", null, htmlAttributes: new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.DatosTarjetaID, "", new { @class = "text-danger" })
+                                        <label for="form-label" class="form-label">Mis Tarjetas</label> |  @Html.ActionLink("Agregar Tarjeta", "Create", "DatosTarjetas")
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        @Html.EditorFor(m => m.FechaEntrega, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(m => m.FechaEntrega, "", new { @class = "text-danger" })
+                                        <label for="form-label" class="form-label">Fecha de entrega</label>
+                                    </div>
 
-        <table cellpadding="2" cellspacing="2">
-            <tr>
-                <th>Option</th>
-                <th>Id</th>
-                <th>Nombre</th>
-                <th>Imagen</th>
-                <th>Precio</th>
-                <th>Cantidad</th>
-                <th>Sub Total</th>
-            </tr>
-            @foreach (Item item in (List<Item>)Session["cart"])
-            {
-                <tr>
-                    <td><a href="@Url.Action("Remove", "Cart", new { id = item.Producto.ProductoID })">Eliminar producto</a></td>
-                    <td>@item.Producto.ProductoID</td>
-                    <td>@item.Producto.nombre</td>
-                    <td><img src="~/img/@item.Producto.Imagen" width="60" /> </td>
-                    <td>$@item.Producto.Precio.<small>00</small></td>
-                    <td>@item.Quantity Kg</td>
-                    <td>$@(item.Producto.Precio * item.Quantity).<small>00</small></td>
-                </tr>
-            }
-            <tr>
-                <td align="right" colspan="6">Total</td>
-                <td>
-                    @{
-                        List<Item> cart = (List<Item>)Session["cart"];
-                        var total = cart.Sum(item => item.Producto.Precio * item.Quantity);
-                    }
-                    $@total.<small>00</small>
-                </td>
-            </tr>
-        </table>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-outline">
+                                        @Html.DropDownList("HoraEntrega", null, htmlAttributes: new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HoraEntrega, "", new { @class = "text-danger" })
+                                        <label for="form-label" class="form-label">Selecciona el horario de entrega</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="mt-4 pt-2">
+                                        <a href="@Url.Action("ProductoCliente", "Productoes")">Continuar comprando</a>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="mt-4 pt-2">
+                                        <input class="btn btn-default btn-primary btn-lg" type="submit" value="Finalizar compra" />
+                                    </div>
+                                </div>
+                            </div>
+                            @*
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.DireccionClienteID, "Direcciones", htmlAttributes: new { @class = "control-label col-md-2" })|    @Html.ActionLink("Agregar Dirección", "Create", "DireccionClientes")
+                                    <div class="col-md-10">
+                                        @Html.DropDownList("DireccionClienteID", null, htmlAttributes: new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.DireccionClienteID, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.DatosTarjetaID, "Tarjetas", htmlAttributes: new { @class = "control-label col-md-2" })|  @Html.ActionLink("Agregar Tarjeta", "Create", "DatosTarjetas")
+                                    <div class="col-md-10">
+                                        @Html.DropDownList("DatosTarjetaID", null, htmlAttributes: new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.DatosTarjetaID, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.FechaEntrega, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(m => m.FechaEntrega, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(m => m.FechaEntrega, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <br>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.HoraEntrega, "Selecciona el horario de entrega", htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.DropDownList("HoraEntrega", null, htmlAttributes: new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.HoraEntrega, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>*@
 
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.DireccionClienteID, "Direcciones", htmlAttributes: new { @class = "control-label col-md-2" })|    @Html.ActionLink("Agregar Dirección", "Create", "DireccionClientes")
-            <div class="col-md-10">
-                @Html.DropDownList("DireccionClienteID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.DireccionClienteID, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.DatosTarjetaID, "Tarjetas", htmlAttributes: new { @class = "control-label col-md-2" })|  @Html.ActionLink("Agregar Tarjeta", "Create", "DatosTarjetas")
-            <div class="col-md-10">
-                @Html.DropDownList("DatosTarjetaID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.DatosTarjetaID, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <br>
-        <div class="form-group">
-            @Html.LabelFor(m => m.FechaEntrega, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(m => m.FechaEntrega, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(m => m.FechaEntrega, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <br>
-        <div class="form-group">
-            @Html.LabelFor(model => model.HoraEntrega, "Selecciona el horario de entrega", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("HoraEntrega", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.HoraEntrega, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <br>
-        <a href="@Url.Action("ProductoCliente", "Productoes")">Continuar comprando</a>
 
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Finalizar Venta" class="btn btn-default" />
+                        }
+                    </section>
+                </div>
             </div>
         </div>
     </div>
-
-}
-
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

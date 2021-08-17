@@ -20,17 +20,17 @@ namespace MercaditoRecargado.Models
         [StringLength(60, MinimumLength = 3)]
         [Required]
         public string Nombre { get; set; }
-        [Display(Name = "Apellido paterno")]
+        [Display(Name = "Apellido Paterno")]
         //Anotacion para definir una longitud maxima.
         [StringLength(60, MinimumLength = 3)]
         [Required]
         public string ApPaterno { get; set; }
-        [Display(Name = "Apellido materno")]
+        [Display(Name = "Apellido Materno")]
 
         [StringLength(60, MinimumLength = 3)]
         [Required]
         public string ApMaterno { get; set; }
-        [Display(Name = "Fecha de nacimiento")]
+        [Display(Name = "Fecha de Nacimiento")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public Nullable<System.DateTime> FechaNac { get; set; }

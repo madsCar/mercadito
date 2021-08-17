@@ -14,30 +14,43 @@
 
             @foreach (var item in Model)
             {
-          
 
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        @Html.DisplayFor(modelItem => item.CategoriasProducto.Descripcion)
-                        <!-- Product image-->
-                        <img class="card-img-top" src="~/img/@Html.DisplayFor(modelItem => item.Imagen)" alt="..." />
-                        <!-- Product details-->
-
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">   @Html.DisplayFor(modelItem => item.nombre)</h5>
-                                <!-- Product price-->
-                                $ @Html.DisplayFor(modelItem => item.Precio)<small>.00</small>
-                            </div>
+                <div>
+                    <div class="card product-card card-static pb-3">
+                       <a class="card-img-top d-block overflow-hidden" href="grocery-single.html"><img src="~/img/@Html.DisplayFor(modelItem => item.Imagen)" alt="Product"></a>
+                        <div class="card-body py-2">
+                            <a class="product-meta d-block fs-xs pb-1">@Html.DisplayFor(modelItem => item.CategoriasProducto.Descripcion)</a>
+                            <h3 class="product-title fs-sm text-truncate"><a href="grocery-single.html">@Html.DisplayFor(modelItem => item.nombre)</a></h3>
+                            <div class="product-price"><span class="text-accent">$@Html.DisplayFor(modelItem => item.Precio)<small></small></span></div>
                         </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a href="@Url.Action("Buy", "Cart", new { id = item.ProductoID })">Agregar 1Kg al carrito</a></div>
+                        <div class="product-floating-btn">
+                           <a class="btn btn-primary btn-shadow btn-sm" type="button" href="@Url.Action("Buy", "Cart", new { id = item.ProductoID })">+ <i class="bi bi-cart-plus-fill"></i></a>
                         </div>
                     </div>
                 </div>
 
+                <!--<div class="col mb-5">
+                    <div class="card h-100">-->
+                      @*  @Html.DisplayFor(modelItem => item.CategoriasProducto.Descripcion)*@
+                        <!-- Product image-->
+                        <!--<img class="card-img-top" src="~/img/-->@*@Html.DisplayFor(modelItem => item.Imagen)<!--" alt="..." />-->
+                        <!-- Product details-->
+
+                        <!--<div class="card-body p-4">
+                            <div class="text-center">-->
+                                <!-- Product name-->
+                                <!--<h5 class="fw-bolder">   @Html.DisplayFor(modelItem => item.nombre)</h5>-->
+                                <!-- Product price-->
+                                <!--$ @Html.DisplayFor(modelItem => item.Precio)<small>.00</small>
+                            </div>
+                        </div>-->
+                        <!-- Product actions-->
+                        <!--<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center"><a href="@Url.Action("Buy", "Cart", new { id = item.ProductoID })">Agregar 1Kg al carrito</a></div>
+                        </div>
+                    </div>
+                </div>-->
+*@
 
             }
 
