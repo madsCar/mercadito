@@ -1,8 +1,6 @@
 ﻿@model MercaditoRecargado.Models.Cliente
 
-@{
-    ViewBag.Title = "Details";
-}
+@{ ViewBag.Title = "Details"; }
 
 <h2>Details</h2>
 
@@ -10,6 +8,62 @@
     <h4>Cliente</h4>
     <hr />
     <dl class="dl-horizontal">
+
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Persona.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Persona.Nombre)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Persona.ApPaterno)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Persona.ApPaterno)
+        </dd>
+        <dd>
+            @Html.DisplayFor(model => model.Persona.ApMaterno)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Persona.FechaNac)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Persona.FechaNac)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Persona.Genero)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Persona.Genero)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Persona.CP)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Persona.CP)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Persona.CURP)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Persona.CURP)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Persona.RFC)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Persona.RFC)
+        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.fechaRegistro)
         </dt>
@@ -17,34 +71,20 @@
         <dd>
             @Html.DisplayFor(model => model.fechaRegistro)
         </dd>
-
+        
         <dt>
-            @Html.DisplayNameFor(model => model.Estatus)
+            @Html.DisplayNameFor(model => model.Persona.Genero)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Estatus)
+            @Html.DisplayFor(model => model.Persona.Genero)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ClienteDatos)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ClienteDatos)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ClienteUser)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ClienteUser)
-        </dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ClienteID }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Editar", "Edit", new { id = Model.ClienteID }) |
+    @Html.ActionLink("Regresar", "Index")
 </p>

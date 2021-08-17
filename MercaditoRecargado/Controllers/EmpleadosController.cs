@@ -109,9 +109,9 @@ namespace MercaditoRecargado.Controllers
                 empleado = model.Empleado;
                 empleado.Persona = model.Empleado.Persona;
                 empleado.fechaIngreso = DateTime.Now;
-                //empleado.Estatus = "Activo";
-
-                empleado.EmlpleadoUser = user.Id;
+                empleado.Estatus = 1;
+                empleado.Persona.CP = "00000";
+                empleado.EmpleadoUser = user.Id;
                 db.Personas.Add(empleado.Persona);
                 db.Empleado.Add(empleado);
                 db.SaveChanges();
@@ -137,7 +137,7 @@ namespace MercaditoRecargado.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Empleado empleado = db.Empleado.Find(id);
-            var user = await UserManager.FindByIdAsync(empleado.EmlpleadoUser);
+            var user = await UserManager.FindByIdAsync(empleado.EmpleadoUser);
             EmpleadoUsuario EmpleadoU = new EmpleadoUsuario();
             EmpleadoU.Empleado = empleado as Empleado;
             EmpleadoU.Usuario = user;
@@ -158,7 +158,7 @@ namespace MercaditoRecargado.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByIdAsync(EmpleadoU.Empleado.EmlpleadoUser);
+                var user = await UserManager.FindByIdAsync(EmpleadoU.Empleado.EmpleadoUser);
                 user.UserName = EmpleadoU.Usuario.Email;
                 user.Email = EmpleadoU.Usuario.Email;
                 var userRoles = await UserManager.GetRolesAsync(user.Id);
@@ -178,13 +178,13 @@ namespace MercaditoRecargado.Controllers
                     ModelState.AddModelError("", result.Errors.First());
                     return View();
                 }
-                EmpleadoU.Empleado.PersonaID = EmpleadoU.Empleado.Persona.PersonaID; 
+                EmpleadoU.Empleado.PersonaID = EmpleadoU.Empleado.Persona.PersonaID;
                 db.Entry(EmpleadoU.Empleado.Persona).State = EntityState.Modified;
                 db.Entry(EmpleadoU.Empleado).State = EntityState.Modified;
                 db.SaveChanges();
-                
 
-                
+
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

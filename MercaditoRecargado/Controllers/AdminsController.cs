@@ -17,7 +17,7 @@ namespace MercaditoRecargado.Controllers
         // GET: Admins
         public ActionResult Index()
         {
-            return View(db.Productoes.ToList());
+            return View();
         }
 
         // GET: Admins/Details/5

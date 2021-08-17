@@ -1,57 +1,68 @@
 ﻿@model IEnumerable<MercaditoRecargado.Models.Empleado>
 
-@{
-    ViewBag.Title = "Index";
-}
 
 <h2>Lista de Empleados</h2>
 
 <p>
     @Html.ActionLink("Crear Nuevo Empleado", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Persona.Nombre)
-        </th>
-       
-        <th>
-            @Html.DisplayNameFor(model => model.puesto)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.fechaIngreso)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.salario)
-        </th>
-       
-       
-        <th></th>
-    </tr>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Empleados</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Persona.Nombre)
-        </td>
-        
-        <td>
-            @Html.DisplayFor(modelItem => item.puesto)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.fechaIngreso)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.salario)
-        </td>
-       
-        
-        <td>
-            @Html.ActionLink("Editar", "Edit", new { id=item.EmpleadoID }) |
-            @Html.ActionLink("Detalles", "Details", new { id=item.EmpleadoID }) |
-            @Html.ActionLink("Eliminar", "Delete", new { id=item.EmpleadoID })
-        </td>
-    </tr>
-}
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Persona.Nombre)
+                        </th>
 
-</table>
+                        <th>
+                            @Html.DisplayNameFor(model => model.puesto)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.fechaIngreso)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.salario)
+                        </th>
+
+
+                        <th></th>
+                    </tr>
+                </thead>
+                @foreach (var item in Model)
+                {
+                    <tbody>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Persona.Nombre)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.puesto)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.fechaIngreso)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.salario)
+                            </td>
+
+
+                            <td>
+                                <a href="@Url.Action("Edit", new { id = item.EmpleadoID })"><i class="bi bi-pencil"></i></a> | 
+                                <a href="@Url.Action("Details", new { id = item.EmpleadoID })"><i class="bi bi-info-circle-fill"></i></a> | 
+                                <a href="@Url.Action("Delete", new { id = item.EmpleadoID })"><i class="bi bi-trash-fill"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>

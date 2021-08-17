@@ -7,71 +7,39 @@
     <link href="~/Content/carousel.css" rel="stylesheet">
 </head>
 <!-- Slider-->
+<!-- Wrapper for slides -->
+@*    <div class="carousel-inner">
 
-
-    <!-- Wrapper for slides -->
-    @*    <div class="carousel-inner">
-
-            <div class="item active">
-                <img class="first-slide" src="~/img/slide01.jpg" alt="Los Angeles" style="width:100%;">
-                <div class="carousel-caption text-left">
-                    <h1>Las verduras mas frescas hasta la puerta de tu hogar</h1>
-                    <p>Garantizamos la frescura de tus productos</p>
-                    <p><a class="btn btn-lg btn-primary" href="/Account/Register" role="button">¡Registrate!</a></p>
-                </div>
-            </div>
-
-            <div class="item">
-                <img class="second-slide" src="~/img/slide02.jpg" alt="Chicago" style="width:100%;">
-                <div class="carousel-caption">
-                    <h1>En apoyo a la economía local</h1>
-                    <p>Buscamos apoyar a los comerciantes locales</p>
-                </div>
-            </div>
-
-            <div class="item">
-                <img class="third-slide" src="~/img/slide01.jpg" alt="New York" style="width:100%;">
-                <div class="carousel-caption">
-                    <h1>Amigables con tu bolsillo</h1>
-                    <p>Queremos que ahorres y tengas lo necesario para tus alimentos</p>
-                </div>
-            </div>
-
-        </div>*@
-
-    <section class="tns-carousel mb-3 mb-md-5">
-        <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 1, &quot;mode&quot;: &quot;gallery&quot;, &quot;nav&quot;: false, &quot;responsive&quot;: {&quot;0&quot;: {&quot;nav&quot;: true, &quot;controls&quot;: false}, &quot;576&quot;: {&quot;nav&quot;: false, &quot;controls&quot;: true}}}">
-            <!-- Slide 1-->
-            <div>
-                <div class="rounded-3 px-md-5 text-center text-xl-start" style="background-image: url(/img/2.png);">
-                    <div>
-                        <div class="d-xl-flex justify-content-between align-items-center px-4 px-sm-5 mx-auto" style="max-width: 1226px; ">
-                            <div class="py-5 me-xl-4 mx-auto mx-xl-0" style="max-width: 490px;">
-                                <h2 class="h1 text-light">Las verduras mas frescas hasta la puerta de tu hogar</h2>
-                                <p class="text-light pb-4">Garantizamos la frescura de tus productos</p>
-                                <h5 class="text-light pb-3">¿No tienes cuenta aun?</h5>
-                                <div class="d-flex flex-wrap justify-content-center justify-content-xl-start"><a class="btn btn-lg btn-primary" href="/Account/Register" role="button">¡Registrate!</a></div>
-                            </div>
-                            @* <div><img src="~/img/mercadoslide11.jpg" alt="Image"></div>*@
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Slide 2-->
-            <div>
-                <div class="rounded-3 px-md-5 text-center text-xl-start" style="background-image: url(/img/1.png);">
-                    <div class="d-xl-flex justify-content-between align-items-center px-4 px-sm-5 mx-auto" style="max-width: 1226px; ">
-                        <div class="py-5 me-xl-4 mx-auto mx-xl-0" style="max-width: 490px;">
-                            <h2 class="h1 text-light">Apoyando la economia local y a tu bolsillo</h2>
-                            <p class="text-light pb-4">Al consumir productos locales, ahorras mas.</p>
-                            <h5 class="text-light pb-3"></h5>
-                            <div class="d-flex flex-wrap justify-content-center justify-content-xl-start"><a href="#" role="button"><span class="btn-market-subtitle"></span><span class="btn-market-title"></span></a><a href="#" role="button"><span class="btn-market-subtitle"></span><span class="btn-market-title"></span></a></div>
-                        </div>
-                        <div></div>
-                    </div>
-                </div>
+        <div class="item active">
+            <img class="first-slide" src="~/img/slide01.jpg" alt="Los Angeles" style="width:100%;">
+            <div class="carousel-caption text-left">
+                <h1>Las verduras mas frescas hasta la puerta de tu hogar</h1>
+                <p>Garantizamos la frescura de tus productos</p>
+                <p><a class="btn btn-lg btn-primary" href="/Account/Register" role="button">¡Registrate!</a></p>
             </div>
         </div>
+
+        <div class="item">
+            <img class="second-slide" src="~/img/slide02.jpg" alt="Chicago" style="width:100%;">
+            <div class="carousel-caption">
+                <h1>En apoyo a la economía local</h1>
+                <p>Buscamos apoyar a los comerciantes locales</p>
+            </div>
+        </div>
+
+        <div class="item">
+            <img class="third-slide" src="~/img/slide01.jpg" alt="New York" style="width:100%;">
+            <div class="carousel-caption">
+                <h1>Amigables con tu bolsillo</h1>
+                <p>Queremos que ahorres y tengas lo necesario para tus alimentos</p>
+            </div>
+        </div>
+
+    </div>*@
+
+<section class="tns-carousel mb-3 mb-md-5">
+    <div class="tns-carousel-inner" data-carousel-options="{&quot;items&quot;: 1, &quot;mode&quot;: &quot;gallery&quot;, &quot;nav&quot;: false, &quot;responsive&quot;: {&quot;0&quot;: {&quot;nav&quot;: true, &quot;controls&quot;: false}, &quot;576&quot;: {&quot;nav&quot;: false, &quot;controls&quot;: true}}}">
+        <!-- Slide 1-->
         <div>
             <div class="rounded-3 px-md-5 text-center text-xl-start" style="background-image: url(/img/2.png);">
                 <div>
@@ -87,7 +55,36 @@
                 </div>
             </div>
         </div>
-    </section>
+        <!-- Slide 2-->
+        <div>
+            <div class="rounded-3 px-md-5 text-center text-xl-start" style="background-image: url(/img/1.png);">
+                <div class="d-xl-flex justify-content-between align-items-center px-4 px-sm-5 mx-auto" style="max-width: 1226px; ">
+                    <div class="py-5 me-xl-4 mx-auto mx-xl-0" style="max-width: 490px;">
+                        <h2 class="h1 text-light">Apoyando la economia local y a tu bolsillo</h2>
+                        <p class="text-light pb-4">Al consumir productos locales, ahorras mas.</p>
+                        <h5 class="text-light pb-3"></h5>
+                        <div class="d-flex flex-wrap justify-content-center justify-content-xl-start"><a href="#" role="button"><span class="btn-market-subtitle"></span><span class="btn-market-title"></span></a><a href="#" role="button"><span class="btn-market-subtitle"></span><span class="btn-market-title"></span></a></div>
+                    </div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+        <div class="rounded-3 px-md-5 text-center text-xl-start" style="background-image: url(/img/2.png);">
+            <div>
+                <div class="d-xl-flex justify-content-between align-items-center px-4 px-sm-5 mx-auto" style="max-width: 1226px; ">
+                    <div class="py-5 me-xl-4 mx-auto mx-xl-0" style="max-width: 490px;">
+                        <h2 class="h1 text-light">Las verduras mas frescas hasta la puerta de tu hogar</h2>
+                        <p class="text-light pb-4">Garantizamos la frescura de tus productos</p>
+                        <h5 class="text-light pb-3">¿No tienes cuenta aun?</h5>
+                        <div class="d-flex flex-wrap justify-content-center justify-content-xl-start"><a class="btn btn-lg btn-primary" href="/Account/Register" role="button">¡Registrate!</a></div>
+                    </div>
+                    @* <div><img src="~/img/mercadoslide11.jpg" alt="Image"></div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
 
 
 
@@ -366,63 +363,24 @@
     <div class="row">
         <div class="col-lg-4">
             <img class="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-            <h2>Heading</h2>
-            <p>Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.</p>
-            <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+            <h2>Misión</h2>
+            <p>Acelerar el crecimiento simplificando y personalizando de las interacciones que construyend lazos duraderos entre los clientes y nuestro sistema mercadito.</p>
+
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
             <img class="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-            <h2>Heading</h2>
-            <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
-            <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+            <h2>Visión</h2>
+            <p>Liderar a nuestra propia organización como equipo el más renombrado de la ciudad de León para crear y desarrollador vínculos empáticos, valiosos y duraderos con las mismas.</p>
+
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
             <img class="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-            <h2>Heading</h2>
-            <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-            <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+            <h2>Misión</h2>
+            <p>Acelerar el crecimiento simplificando y personalizando de las interacciones que construyen lazos duraderos entre los clientes y nuestro sistema Mercadito..</p>
+
         </div><!-- /.col-lg-4 -->
     </div><!-- /.row -->
     <!-- START THE FEATURETTES -->
-
-    <hr class="featurette-divider">
-
-    <div class="row featurette">
-        <div class="col-md-7">
-            <h2 class="featurette-heading">First featurette heading. <span class="text-muted">It'll blow your mind.</span></h2>
-            <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-        </div>
-        <div class="col-md-5">
-            <img class="featurette-image img-fluid mx-auto" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
-        </div>
-    </div>
-
-    <hr class="featurette-divider">
-
-    <div class="row featurette">
-        <div class="col-md-7 order-md-2">
-            <h2 class="featurette-heading">Oh yeah, it's that good. <span class="text-muted">See for yourself.</span></h2>
-            <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-        </div>
-        <div class="col-md-5 order-md-1">
-            <img class="featurette-image img-fluid mx-auto" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
-        </div>
-    </div>
-
-    <hr class="featurette-divider">
-
-    <div class="row featurette">
-        <div class="col-md-7">
-            <h2 class="featurette-heading">And lastly, this one. <span class="text-muted">Checkmate.</span></h2>
-            <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-        </div>
-        <div class="col-md-5">
-            <img class="featurette-image img-fluid mx-auto" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
-        </div>
-    </div>
-
-    <hr class="featurette-divider">
-
     <!-- /END THE FEATURETTES -->
 
 </div><!-- /.container -->

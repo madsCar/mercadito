@@ -1,50 +1,211 @@
-﻿@model MercaditoRecargado.Models.VentaDetalle
+﻿@model MercaditoRecargado.Models.Venta
 
 @{
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
 
-<div>
-    <h4>VentaDetalle</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Producto.nombre)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Producto.nombre)
-        </dd>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FolioVenta)
-        </dt>
+<div class="form-horizontal">
+    <div>
+        <h2>Detalle del pedido: @Html.DisplayFor(model => model.VentaID) | Estado: @Html.DisplayFor(model => model.Estatus)</h2>
+        <hr />
+        <table class="table">
 
-        <dd>
-            @Html.DisplayFor(model => model.FolioVenta)
-        </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Precio)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Precio)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.FechaEntrega)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.FechaEntrega) a las @Html.DisplayFor(model => model.HoraEntrega)
+                </td>
+            </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.cantidad)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.cantidad)
-        </dd>
 
-    </dl>
-</div>
+
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Cliente.Persona.Nombre) Cliente
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.Cliente.Persona.Nombre) @Html.DisplayFor(model => model.Cliente.Persona.ApPaterno)  @Html.DisplayFor(model => model.Cliente.Persona.ApMaterno)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.DireccionCliente.Calle)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.DireccionCliente.Calle) @Html.DisplayFor(model => model.DireccionCliente.NumeroExterior),  @Html.DisplayFor(model => model.DireccionCliente.NumeroInterior), Colonia @Html.DisplayFor(model => model.DireccionCliente.Colonia), CP @Html.DisplayFor(model => model.DireccionCliente.CodigoPostal)
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Empleado.Persona.Nombre) Empleado asignado
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.Empleado.Persona.Nombre) @Html.DisplayFor(model => model.Empleado.Persona.ApPaterno)  @Html.DisplayFor(model => model.Empleado.Persona.ApMaterno)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Total)
+                </td>
+                <td>
+                    $@Html.DisplayFor(model => model.Total)
+                </td>
+            </tr>
+
+
+
+        </table>
+        <div class="form-group">
+
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.Total, new { htmlAttributes = new { @class = "form-control" } })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.FechaEntrega, new { htmlAttributes = new { @class = "form-control" } })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.fechaVenta, new { htmlAttributes = new { @class = "form-control" } })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.RequirioFactura, new { htmlAttributes = new { @class = "form-control" } })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.HoraEntrega, new { htmlAttributes = new { @class = "form-control" } })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.VentaID, new { htmlAttributes = new { @class = "form-control" } })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EmpleadoID, "Empleado", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("EmpleadoID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.EmpleadoID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.DatosTarjetaID, new { htmlAttributes = new { @class = "form-control" } })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.clienteID, new { htmlAttributes = new { @class = "form-control" } })
+
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            <div class="col-md-10">
+                @Html.HiddenFor(model => model.DireccionClienteID, new { htmlAttributes = new { @class = "form-control" } })
+
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Asignar Empleado" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+    </div>
+    }
+<br>
+
+    <h2>Detalles</h2>
+
+    <table class="table">
+        <tr>
+
+
+            <th>
+                Nombre
+            </th>
+
+            <th>
+                Precio
+            </th>
+            <th>
+                Cantidad
+            </th>
+            <th>
+                Total
+            </th>
+
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.VentaDetalles)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Producto.nombre)
+                </td>
+
+                <td>
+                    $@Html.DisplayFor(modelItem => item.Precio)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cantidad)
+                </td>
+
+                <td>
+                    $@(item.Precio * item.Cantidad)
+                </td>
+            </tr>
+        }
+
+    </table>
+
+
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.VentaDetalleID }) |
-    @Html.ActionLink("Back to List", "Index")
+
+    @Html.ActionLink("Regresar", "Index")
 </p>

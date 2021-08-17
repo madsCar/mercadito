@@ -1,64 +1,196 @@
-﻿@model MercaditoRecargado.Models.VentaDetalle
+﻿@model MercaditoRecargado.Models.Venta
 
 @{
     ViewBag.Title = "Create";
 }
+@using MercaditoRecargado.Models;
 
-<h2>Create</h2>
 
 
-@using (Html.BeginForm()) 
+
+
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>VentaDetalle</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <h4>Carrito de compras</h4>
+
+        <table cellpadding="2" cellspacing="2">
+            <tr>
+                <th>Option</th>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Imagen</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Sub Total</th>
+            </tr>
+            @foreach (Item item in (List<Item>)Session["cart"])
+            {
+                <tr>
+                    <td><a href="@Url.Action("Remove", "Cart", new { id = item.Producto.ProductoID })">Eliminar producto</a></td>
+                    <td>@item.Producto.ProductoID</td>
+                    <td>@item.Producto.nombre</td>
+                    <td><img src="~/img/@item.Producto.Imagen" width="60" /> </td>
+                    <td>$@item.Producto.Precio.<small>00</small></td>
+                    <td>@item.Quantity Kg</td>
+                    <td>$@(item.Producto.Precio * item.Quantity).<small>00</small></td>
+                </tr>
+            }
+            <tr>
+                <td align="right" colspan="6">Total</td>
+                <td>
+                    @{
+                        List<Item> cart = (List<Item>)Session["cart"];
+                        var total = cart.Sum(item => item.Producto.Precio * item.Quantity);
+                    }
+                    $@total.<small>00</small>
+                </td>
+            </tr>
+        </table>
+
+
         <div class="form-group">
-            @Html.LabelFor(model => model.FolioVenta, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.DireccionClienteID, "Direcciones", htmlAttributes: new { @class = "control-label col-md-2" })|    @Html.ActionLink("Agregar Dirección", "Create", "DireccionClientes")
             <div class="col-md-10">
-                @Html.EditorFor(model => model.FolioVenta, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.FolioVenta, "", new { @class = "text-danger" })
+                @Html.DropDownList("DireccionClienteID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DireccionClienteID, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.DatosTarjetaID, "Tarjetas", htmlAttributes: new { @class = "control-label col-md-2" })|  @Html.ActionLink("Agregar Tarjeta", "Create", "DatosTarjetas")
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
+                @Html.DropDownList("DatosTarjetaID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DatosTarjetaID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <br>
+        <div class="form-group">
+            @Html.LabelFor(m => m.FechaEntrega, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.FechaEntrega, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(m => m.FechaEntrega, "", new { @class = "text-danger" })
             </div>
         </div>
 
+        <br>
         <div class="form-group">
-            @Html.LabelFor(model => model.cantidad, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.HoraEntrega, "Selecciona el horario de entrega", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.cantidad, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.cantidad, "", new { @class = "text-danger" })
+                @Html.DropDownList("HoraEntrega", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.HoraEntrega, "", new { @class = "text-danger" })
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ProductoID, "ProductoID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("ProductoID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ProductoID, "", new { @class = "text-danger" })
-            </div>
-        </div>
+        <br>
+        <a href="@Url.Action("ProductoCliente", "Productoes")">Continuar comprando</a>
+
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Finalizar Venta" class="btn btn-default" />
             </div>
         </div>
     </div>
+
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var today = new Date();
+        var month = ('0' + (today.getMonth() + 1)).slice(-2);
+        var day = ('0' + today.getDate()).slice(-2);
+        var day2 = ('0' + (today.getDate() + 1)).slice(-2);
+        var year = today.getFullYear();
+        var date = year + '-' + month + '-' + day;
+        var dateMax = year + '-' + month + '-' + day2;
+        $('[id*=FechaEntrega]').attr('min', date);
+        $('[id*=FechaEntrega]').attr('max', dateMax);
+        document.getElementById("HoraEntrega").disabled = true;
+        $("#HoraEntrega").append("<option>Seleccione una fecha</option>");
+    });
+
+    $(function () {
+
+        var hora;
+        $("#FechaEntrega").change(function () {
+            var today = new Date();
+            var month = ('0' + (today.getMonth() + 1)).slice(-2);
+            var day = ('0' + today.getDate()).slice(-2);
+            var day2 = ('0' + (today.getDate() + 2)).slice(-2);
+            var year = today.getFullYear();
+            var date = year + '-' + month + '-' + day;
+            if ($(this).val() === date) {
+
+                document.getElementById("HoraEntrega").disabled = false;
+                hora = today.getHours() * 60 + 60;
+
+                populate('#HoraEntrega', hora);
+            } else {
+                document.getElementById("HoraEntrega").disabled = false;
+                hora = 480;
+                populate('#HoraEntrega', hora);
+            }
+        });
+    });
+
+
+
+    function populate(selector, hora) {
+        var select = $(selector);
+        var hours, hours2, minutes, ampm;
+        select.empty();
+        if (hora > 1030) {
+            select.append('<option>No hay horario disponible, seleccione otra fecha</option>');
+            select.attr('disabled', 'true');
+        } else {
+            select.removeAttr('disabled', 'false');
+            for (var i = hora; i <= 1030; i += 60) {
+                hours = Math.floor(i / 60);
+                hours2 = Math.floor((i + 60) / 60);
+                minutes = i % 60;
+                if (minutes < 10) {
+                    minutes = '0' + minutes; // adding leading zero to minutes portion
+                }
+                //add the value to dropdownlist
+                select.append($('<option></option>')
+                    .attr('value', hours + ':' + minutes)
+                    .text(hours + ':' + minutes + "-" + hours2 + ':' + minutes));
+            }
+        }
+    }
+    (function dirtar() {
+        var tarjeta = $("#DatosTarjetaID");
+        var direccion = $("#DireccionClienteID");
+
+        if (tarjeta.children().length === 0) {
+            tarjeta.append('<option>Para continuar es necesario agregar una tarjeta</option>');
+            tarjeta.attr('disabled', 'true');
+        }
+        if (direccion.children().length === 0) {
+            direccion.append('<option>Para continuar es necesario agregar una direccion</option>');
+            direccion.attr('disabled', 'true');
+        }
+    })();
+
+
+    $("Form[action='/VentaDetalles/Create']").submit(function () {
+        var flag = true;
+        if ($("#DatosTarjetaID").is(':disabled')) {
+            flag = false;
+        }
+        if ($("#DireccionClienteID").is(':disabled')) {
+            flag = false;
+        }
+        return flag;
+    });
+
+</script>

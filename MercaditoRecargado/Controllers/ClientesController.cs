@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using MercaditoRecargado.Models;
-using System.Data.Entity.Validation;
 using IdentitySample.Models;
+using MercaditoRecargado.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 
 namespace MercaditoRecargado.Controllers
 {
+
+    [Authorize(Roles = "Admin")]
     public class ClientesController : Controller
     {
         private ClientesModelContext db = new ClientesModelContext();
@@ -40,6 +42,13 @@ namespace MercaditoRecargado.Controllers
                 _userManager = value;
             }
         }
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error);
+            }
+        }
 
         private ApplicationRoleManager _roleManager;
         public ApplicationRoleManager RoleManager
@@ -57,7 +66,11 @@ namespace MercaditoRecargado.Controllers
         // GET: Clientes
         public ActionResult Index()
         {
-            var clientes = db.Cliente.Include(c => c.Persona);
+           
+            //var user = User.Identity.GetUserId();
+            // var clientes = db.Cliente.SqlQuery("select ClienteID from Clientes where Clientes.ClienteUser = '"+user+"'");
+           // Cliente cliente = db.Cliente.Find(clientes);
+             var clientes = db.Cliente.Include(c => c.Persona);
             return View(clientes.ToList());
         }
 
@@ -76,6 +89,8 @@ namespace MercaditoRecargado.Controllers
             return View(cliente);
         }
 
+
+
         // GET: Clientes/Create
         public ActionResult Create()
         {
@@ -88,53 +103,44 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Cliente cliente)
+        public async System.Threading.Tasks.Task<ActionResult> Create(ClienteUsuario model)
         {
-            if (ModelState.IsValid)
-            {
-                db.Cliente.Add(cliente);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+           
+                var user = new ApplicationUser { UserName = model.Usuario.Email, Email = model.Usuario.Email };
+                var result = await UserManager.CreateAsync(user, model.UsuarioR.Password);
 
-                // if (Request.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Empleado"))
-                // {
-                //      cliente.ClienteUser = null;
-                //  }
-                try
+                if (result.Succeeded)
                 {
+                    var result2 = await UserManager.AddToRolesAsync(user.Id, "Cliente");
+                    Cliente cliente = new Cliente();
+                    cliente = model.Cliente;
+                    cliente.Persona = model.Cliente.Persona;
                     cliente.fechaRegistro = DateTime.Now;
                     cliente.Estatus = 1;
-                    var datos = TempData["data"] as string;
-                    cliente.ClienteUser = datos;
+                    //cliente.Persona.Ciudad = "XXX";
+                    cliente.Persona.CP = "XXX";
+                    //cliente.Persona.Estado = "XXX";
+                    //cliente.Persona.Domicilio = "XXX";
+
+                    cliente.ClienteUser = user.Id;
                     db.Personas.Add(cliente.Persona);
                     db.Cliente.Add(cliente);
                     db.SaveChanges();
-                }
-                catch (DbEntityValidationException e)
-                {
-
-                    Console.WriteLine(e);
-                }
-
-                if (Request.IsAuthenticated && User.IsInRole("Admin") || User.IsInRole("Empleado"))
-                {
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-
-                    return Redirect("~/Account/Login");
-                }
-
-
-
-
+                    var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
+                    //ViewBag.Link = callbackUrl;
+                  //  return View("DisplayEmail");
+                
+                AddErrors(result);
             }
 
-            ViewBag.ClienteDatos = new SelectList(db.Personas, "PersonaID", "Nombre", cliente.PersonaID);
-            
-            return View(cliente);
+            // If we got this far, something failed, redisplay form
+            return RedirectToAction("Index");
         }
+
+
+
 
         // GET: Clientes/Edit/5
         public async System.Threading.Tasks.Task<ActionResult> Edit(int? id)
@@ -143,6 +149,7 @@ namespace MercaditoRecargado.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            
             Cliente cliente = db.Cliente.Find(id);
             var user = await UserManager.FindByIdAsync(cliente.ClienteUser);
             ClienteUsuario ClienteU = new ClienteUsuario();
@@ -161,18 +168,18 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async System.Threading.Tasks.Task<ActionResult> Edit(ClienteUsuario clienteU, params string[] selectedRole)
+        public async System.Threading.Tasks.Task<ActionResult> Edit(ClienteUsuario clienteU,  params string[] selectedRole)
         {
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByIdAsync(clienteU.Cliente.ClienteUser);
                 user.UserName = clienteU.Usuario.Email;
                 user.Email = clienteU.Usuario.Email;
-
+                
 
                 var userRoles = await UserManager.GetRolesAsync(user.Id);
 
-                selectedRole = selectedRole ?? new string[] { "Cliente" };
+                selectedRole = selectedRole ?? new string[] {"Cliente"};
 
                 var result = await UserManager.AddToRolesAsync(user.Id, selectedRole.Except(userRoles).ToArray<string>());
 
@@ -188,13 +195,14 @@ namespace MercaditoRecargado.Controllers
                     ModelState.AddModelError("", result.Errors.First());
                     return View();
                 }
-                db.Entry(clienteU.Cliente.Persona).State = EntityState.Modified;
 
-                // db.Entry(clienteU.Cliente).State = EntityState.Modified;
+                db.Entry(clienteU.Cliente.Persona).State = EntityState.Modified;
+          
+               // db.Entry(clienteU.Cliente).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            // ViewBag.ClienteDatos = new SelectList(db.Personas, "PersonaID", "Nombre", cliente.Persona);
+           // ViewBag.ClienteDatos = new SelectList(db.Personas, "PersonaID", "Nombre", cliente.Persona);
             return View(clienteU.Cliente);
         }
 

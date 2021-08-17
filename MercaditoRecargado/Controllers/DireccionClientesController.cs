@@ -11,8 +11,10 @@ using Microsoft.AspNet.Identity;
 
 namespace MercaditoRecargado.Controllers
 {
+    [Authorize(Roles = "Cliente")]
     public class DireccionClientesController : Controller
     {
+        
         private ClientesModelContext db = new ClientesModelContext();
 
         // GET: DireccionClientes
@@ -35,7 +37,7 @@ namespace MercaditoRecargado.Controllers
             var direccion = db.DireccionCliente.ToList();
             foreach (DireccionCliente x in direccion)
             {
-                if (x.PersonaDireccion == client.PersonaID)
+                if (x.PersonaID == client.PersonaID)
                 {
                     client.DireccionClientes.Add(x);
                     
@@ -70,10 +72,24 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "DireccionClienteID,Calle,NumeroExterior,NumeroInterior,Referencia,Colonia,Municipio,Estado,CodigoPostal,PersonaDireccion")] DireccionCliente direccionCliente)
+        public ActionResult Create([Bind(Include = "DireccionClienteID,Calle,NumeroExterior,NumeroInterior,Referencia,Colonia,Municipio,Estado,CodigoPostal,PersonaID")] DireccionCliente direccionCliente)
         {
             if (ModelState.IsValid)
             {
+                var user = User.Identity.GetUserId();
+                var personaID = db.Personas.SqlQuery("select * from Personas p join Clientes c on p.PersonaID = c.PersonaID where c.ClienteUser = '" + user + "'").ToList();
+                Persona client = new Persona();
+                List<SelectListItem> dir;
+                dir = new List<SelectListItem>();
+                foreach (var item in personaID)
+                {
+                    client = item;
+                }
+                client = db.Personas.Find(client.PersonaID);
+
+
+                direccionCliente.PersonaID = client.PersonaID;
+
                 db.DireccionCliente.Add(direccionCliente);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -102,7 +118,7 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "DireccionClienteID,Calle,NumeroExterior,NumeroInterior,Referencia,Colonia,Municipio,Estado,CodigoPostal,PersonaDireccion")] DireccionCliente direccionCliente)
+        public ActionResult Edit([Bind(Include = "DireccionClienteID,Calle,NumeroExterior,NumeroInterior,Referencia,Colonia,Municipio,Estado,CodigoPostal,PersonaID")] DireccionCliente direccionCliente)
         {
             if (ModelState.IsValid)
             {

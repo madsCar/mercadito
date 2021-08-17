@@ -12,6 +12,7 @@ using Microsoft.AspNet.Identity;
 
 namespace MercaditoRecargado.Controllers
 {
+    [Authorize(Roles = "Cliente")]
     public class DatosTarjetasController : Controller
     {
         private ClientesModelContext db = new ClientesModelContext();
@@ -81,10 +82,21 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "DatosTarjetaID,Last4,NumeroTarjeta,FechaVencimiento,CVV,ClienteTarjeta")] DatosTarjeta datosTarjeta)
+        public ActionResult Create([Bind(Include = "DatosTarjetaID,Last4,NumeroTarjeta,FechaVencimiento,CVV,ClienteID")] DatosTarjeta datosTarjeta)
         {
             if (ModelState.IsValid)
             {
+                var user = User.Identity.GetUserId();
+
+                //var cliente = ddb.Cliente.SqlQuery("select * from Clientes cl join  c  on c.ClienteID=dt.ClienteTarjeta where c.ClienteUser= ' " + user +"'");
+                var clientesID = db.Cliente.SqlQuery("select * from Clientes where Clientes.ClienteUser = '" + user + "'").ToList();
+                Cliente client = new Cliente();
+                List<SelectListItem> tar;
+                tar = new List<SelectListItem>();
+                foreach (var item in clientesID)
+                {
+                    client = item;
+                }
                 db.DatosTarjeta.Add(datosTarjeta);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -113,7 +125,7 @@ namespace MercaditoRecargado.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "DatosTarjetaID,Last4,NumeroTarjeta,FechaVencimiento,CVV,ClienteTarjeta")] DatosTarjeta datosTarjeta)
+        public ActionResult Edit([Bind(Include = "DatosTarjetaID,Last4,NumeroTarjeta,FechaVencimiento,CVV,ClienteID")] DatosTarjeta datosTarjeta)
         {
             if (ModelState.IsValid)
             {

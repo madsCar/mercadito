@@ -1,65 +1,207 @@
-﻿@model MercaditoRecargado.Models.VentaDetalle
+﻿@model MercaditoRecargado.Models.Venta
 
 @{
     ViewBag.Title = "Edit";
 }
 
-<h2>Edit</h2>
+
 
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>VentaDetalle</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.VentaDetalleID)
+        <div>
+            <h2>Detalle del pedido: @Html.DisplayFor(model => model.VentaID) | Estado: @Html.DisplayFor(model => model.Estatus)</h2>
+            <hr />
+            <table class="table">
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.FolioVenta, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.FolioVenta, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.FolioVenta, "", new { @class = "text-danger" })
+
+
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.FechaEntrega)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.FechaEntrega) a las @Html.DisplayFor(model => model.HoraEntrega)
+                    </td>
+                </tr>
+
+
+
+
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Cliente.Persona.Nombre) Cliente
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.Cliente.Persona.Nombre) @Html.DisplayFor(model => model.Cliente.Persona.ApPaterno)  @Html.DisplayFor(model => model.Cliente.Persona.ApMaterno)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.DireccionCliente.Calle)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.DireccionCliente.Calle) @Html.DisplayFor(model => model.DireccionCliente.NumeroExterior),  @Html.DisplayFor(model => model.DireccionCliente.NumeroInterior), Colonia @Html.DisplayFor(model => model.DireccionCliente.Colonia), CP @Html.DisplayFor(model => model.DireccionCliente.CodigoPostal)
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Total)
+                    </td>
+                    <td>
+                        $@Html.DisplayFor(model => model.Total)
+                    </td>
+                </tr>
+
+
+
+            </table>
+            <div class="form-group">
+
+                <div class="col-md-10">
+                    @Html.HiddenFor(model => model.Total, new { htmlAttributes = new { @class = "form-control" } })
+
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Precio, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Precio, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Precio, "", new { @class = "text-danger" })
+            <div class="form-group">
+
+                <div class="col-md-10">
+                    @Html.HiddenFor(model => model.FechaEntrega, new { htmlAttributes = new { @class = "form-control" } })
+
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.cantidad, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.cantidad, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.cantidad, "", new { @class = "text-danger" })
+            <div class="form-group">
+
+                <div class="col-md-10">
+                    @Html.HiddenFor(model => model.fechaVenta, new { htmlAttributes = new { @class = "form-control" } })
+
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ProductoID, "ProductoID", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("ProductoID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.ProductoID, "", new { @class = "text-danger" })
+            <div class="form-group">
+
+                <div class="col-md-10">
+                    @Html.HiddenFor(model => model.RequirioFactura, new { htmlAttributes = new { @class = "form-control" } })
+
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+            <div class="form-group">
+
+                <div class="col-md-10">
+                    @Html.HiddenFor(model => model.HoraEntrega, new { htmlAttributes = new { @class = "form-control" } })
+
+                </div>
+            </div>
+
+            <div class="form-group">
+
+                <div class="col-md-10">
+                    @Html.HiddenFor(model => model.VentaID, new { htmlAttributes = new { @class = "form-control" } })
+
+                </div>
+            </div>
+            <div class="form-group">
+
+                <div class="col-md-10">
+                    @Html.HiddenFor(model => model.EmpleadoID, new { htmlAttributes = new { @class = "form-control" } })
+
+                </div>
+            </div>
+
+            <div class="form-group">
+
+                <div class="col-md-10">
+                    @Html.HiddenFor(model => model.DatosTarjetaID, new { htmlAttributes = new { @class = "form-control" } })
+
+                </div>
+            </div>
+
+            <div class="form-group">
+
+                <div class="col-md-10">
+                    @Html.HiddenFor(model => model.clienteID, new { htmlAttributes = new { @class = "form-control" } })
+
+                </div>
+            </div>
+
+            <div class="form-group">
+
+                <div class="col-md-10">
+                    @Html.HiddenFor(model => model.DireccionClienteID, new { htmlAttributes = new { @class = "form-control" } })
+
+                </div>
+            </div>
+
+
+            <br>
+
+            <h2>Productos</h2>
+
+            <table class="table">
+                <tr>
+
+
+                    <th>
+                        Nombre
+                    </th>
+
+                    <th>
+                        Precio
+                    </th>
+                    <th>
+                        Cantidad
+                    </th>
+                    <th>
+                        Total
+                    </th>
+
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model.VentaDetalles)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Producto.nombre)
+                        </td>
+
+                        <td>
+                            $@Html.DisplayFor(modelItem => item.Precio)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Cantidad) Kg
+                        </td>
+
+                        <td>
+                            $@(item.Precio * item.Cantidad)
+                        </td>
+                    </tr>
+                }
+
+            </table>
+
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Finalizar pedido" class="btn btn-default" />
+                </div>
             </div>
         </div>
     </div>
 }
+<p>
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+    @Html.ActionLink("Regresar", "PedidosEmpleado")
+</p>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

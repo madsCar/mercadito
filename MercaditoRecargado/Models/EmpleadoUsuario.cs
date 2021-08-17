@@ -10,8 +10,6 @@ namespace MercaditoRecargado.Models
     {
         public ApplicationUser Usuario { get; set; }
         public RegisterViewModel UsuarioR { get; set; }
-
-
         public Empleado Empleado { get; set; }
     }
 }
